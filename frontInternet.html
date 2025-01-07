@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet dos Postos</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <div class="logo">
+    <h1>Internet dos Postos</h1>
+    <img src="img/logor7.png" alt="logo" width="150px" height="150px">
+</div>
+    <div class="search">
+        <label for="id-input">Buscar pelo numero do posto, nome ou vencimento:</label>
+        <input type="text" id="id-input" placeholder="Buscar pelo numero do posto, nome ou vencimento" onkeypress="handleKeyPress(event)">
+        <button onclick="fetchData()">Buscar</button>
+    </div>
+    <div id="data-container" class="data-container">
+        <p>Carregando dados...</p>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const id = document.getElementById('id-input').value || '84';
+            const nomeposto = document.getElementById('id-input').value || 'pinheiro';
+            const vencimento = document.getElementById('id-input').value || '1';
+            const url = `http://172.20.20.213:3000/inter?id=${id}&nome=${nomeposto}&vencimento=${vencimento}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar os dados');
+                }
+                const data = await response.json();
+                if (!data || Object.keys(data).length === 0) {
+                    document.getElementById('data-container').innerHTML = '<p>Nenhum posto encontrado</p>';
+                } else {
+                    displayData(data);
+                }
+            } catch (error) {
+                document.getElementById('data-container').innerHTML = '<p>Erro ao carregar os dados.</p>';
+                console.error(error);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                fetchData();
+            }
+        }
+
+        function displayData(data) {
+            const container = document.getElementById('data-container');
+            container.innerHTML = '';
+
+            if (typeof data === 'object') {
+                if (Array.isArray(data)) {
+                    data.forEach((item, index) => {
+                        renderDataItem(item, container, index + 1);
+                    });
+                } else {
+                    renderDataItem(data, container, 1);
+                }
+            } else {
+                container.innerHTML = '<p>Dados inválidos ou não reconhecidos.</p>';
+            }
+        }
+
+        function renderDataItem(data, container, displayId) {
+            const itemContainer = document.createElement('div');
+            itemContainer.className = 'data-item';
+
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const value = typeof data[key] === 'object' ? JSON.stringify(data[key], null, 2) : data[key];
+                    const label = key === 'id' ? 'Numero da Internet' : formatLabel(key);
+                    const item = document.createElement('div');
+                    item.innerHTML = `<span class="label">${label}:</span><div>${key === 'id' ? displayId : value}</div>`;
+                    itemContainer.appendChild(item);
+                }
+            }
+            container.appendChild(itemContainer);
+        }
+
+        function formatLabel(label) {
+            switch (label) {
+                case 'nome': return 'Nome do Posto';
+                case 'id': return 'Numero da Internet';
+                case 'qntd_conta': return 'Quantidade de Internet';
+                case 'prod': return 'Produto';
+                case 'situacao': return 'Situação';
+                default: return label.charAt(0).toUpperCase() + label.slice(1).replace(/_/g, ' ');
+            }
+        }
+
+
+        fetchData();
+    </script>
+    <div class="rodape">
+    <p>REDE 7 - Versão 1.0.0 | © Todos os direitos reservados.</p>
+</div>
+</body>
+</html>
