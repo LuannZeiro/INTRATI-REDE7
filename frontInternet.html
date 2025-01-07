@@ -24,7 +24,7 @@
         async function fetchData() {
             const id = document.getElementById('id-input').value || '84';
             const nomeposto = document.getElementById('id-input').value || 'pinheiro';
-            const vencimento = document.getElementById('id-input').value || '1';
+            const vencimento = document.getElementById('id-input').value || '0';
             const url = `http://172.20.20.213:3000/inter?id=${id}&nome=${nomeposto}&vencimento=${vencimento}`;
             try {
                 const response = await fetch(url);
