@@ -3,8 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inserir Dados no Banco</title>
+<title>INSERIR CHAMADO - REDE 7</title>
 <link rel="stylesheet" href="style/style.css">
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+ 
+    h1 {
+      color: #028108;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 2.5em;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+ 
+    .header {
+      background-color: #028108;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+ 
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      box-sizing: border-box;
+    }
+ 
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #028108;
+      margin-bottom: 8px;
+      display: block;
+    }
+ 
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+ 
+    input[type="text"], input[type="number"], input[type="date"] {
+      background-color: #f4f4f4;
+    }
+ 
+    input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+      border-color: #028108;
+      outline: none;
+    }
+ 
+    button {
+      background-color: #028108;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+ 
+    button:hover {
+      background-color: #1b4f35;
+    }
+ 
+    textarea {
+      height: 100px;
+      resize: none;
+      background-color: #f4f4f4;
+    }
+ 
+    textarea:focus {
+      border-color: #028108;
+      outline: none;
+    }
+
+  </style>
 <script>
     async function buscarNomePosto() {
       const idPosto = document.getElementById('n_posto').value;
@@ -16,7 +111,7 @@
       }
  
       try {
-        const response = await fetch(`http://172.20.20.213:3000/pi?id=${idPosto}`);
+        const response = await fetch(`http://localhost:80/pi?id=${idPosto}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar o nome do posto.');
         }
@@ -47,7 +142,7 @@
       const obs = document.getElementById('obs').value;
  
       try {
-        const response = await fetch('http://172.20.20.213:8080/mapi', {
+        const response = await fetch('http://localhost:3000/mapi', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -80,61 +175,45 @@
 <body>
     <div class="superior">
         <div class="logo">
-        <h1>INSERIR DADOS</h1>
+        <h1>INSERIR CHAMADO DE EQUIPAMENTOS</h1>
     </div>
         <div class="logo3">
-        <img src="img/logor7.png" alt="logo" width="100px" height="100px">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+    </a>
     </div>
     </div>
-    <div class="formulario">
+<div class="form-container">
 <form id="formulario" onsubmit="enviarFormulario(event)">
 <label for="chamado">Chamado:</label>
-<input type="text" id="chamado" name="chamado" required><br><br>
+<input type="text" id="chamado" name="chamado" required><br>
  
-    <label for="n_posto">Número do Posto:</label>
-<input type="text" id="n_posto" name="n_posto" onblur="buscarNomePosto()" required><br><br>
+      <label for="n_posto">Número do Posto:</label>
+<input type="text" id="n_posto" name="n_posto" onblur="buscarNomePosto()" required><br>
  
-    <label for="nome_posto">Nome do Posto:</label>
-<input type="text" id="nome_posto" name="nome_posto" readonly required><br><br>
+      <label for="nome_posto">Nome do Posto:</label>
+<input type="text" id="nome_posto" name="nome_posto" readonly required><br>
  
-    <label for="dia">Dia:</label>
-<input type="date" id="dia" name="dia" required><br><br>
+      <label for="dia">Dia:</label>
+<input type="date" id="dia" name="dia" required><br>
  
-    <label for="nome_equipamento">Nome do Equipamento:</label>
-<input type="text" id="nome_equipamento" name="nome_equipamento" required><br><br>
+      <label for="nome_equipamento">Nome do Equipamento:</label>
+<input type="text" id="nome_equipamento" name="nome_equipamento" required><br>
  
-    <label for="quantidade">Quantidade:</label>
-<input type="number" id="quantidade" name="quantidade" required><br><br>
+      <label for="quantidade">Quantidade:</label>
+<input type="number" id="quantidade" name="quantidade" required><br>
  
-    <label for="coordenador">Coordenador:</label>
-<input type="text" id="coordenador" name="coordenador" required><br><br>
+      <label for="coordenador">Coordenador:</label>
+<input type="text" id="coordenador" name="coordenador" required><br>
  
-    <label for="estatus">Status:</label>
-<input type="text" id="estatus" name="estatus" required><br><br>
+      <label for="estatus">Estatus:</label>
+<input type="text" id="estatus" name="estatus" required><br>
  
-    <label for="obs">Observações:</label>
-<textarea id="obs" name="obs"></textarea><br><br>
-</div>
+      <label for="obs">Observações:</label>
+<textarea id="obs" name="obs"></textarea><br>
  
-<div class="search1">
-    <button type="submit">Enviar</button>
-</div>
+      <button type="submit">Enviar</button>
 </form>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="rodape">
-    <p>REDE 7 - Versão 2.0 | © Todos os direitos reservados.</p>
 </div>
 </body>
 </html>

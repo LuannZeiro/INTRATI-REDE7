@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>historico de Chamados</title>
+<title>HISTORICO - REDE 7</title>
 <link rel="stylesheet" href="style/style.css">
 <style>
     body {
@@ -17,7 +17,6 @@
       flex-direction: column;
     }
 
- 
     .table-container {
       width: 80%;
       margin-top: 30px;
@@ -26,7 +25,7 @@
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
- 
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -34,28 +33,52 @@
       font-size: 16px;
       text-align: left;
     }
- 
+
     th, td {
       padding: 12px;
       border: 1px solid #ddd;
     }
- 
+
     th {
       background-color: #028108;
       color: white;
       font-weight: bold;
     }
- 
+
     tr:nth-child(even) {
       background-color: #f2f2f2;
     }
- 
+
     tr:hover {
       background-color: #e1f5e1;
     }
- 
+
     td {
       background-color: #fafafa;
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #028108;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #026b06;
     }
 </style>
 <script>
@@ -63,49 +86,28 @@
       try {
         const response = await fetch('http://172.20.20.213:8080/map');
         const data = await response.json();
- 
+
         if (data && Array.isArray(data)) {
           const tableBody = document.getElementById('table-body');
           tableBody.innerHTML = '';
- 
-          data.forEach(item => {
+
+          const sortedData = data.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+          sortedData.forEach(item => {
             const row = document.createElement('tr');
-            const chamadoCell = document.createElement('td');
-            chamadoCell.textContent = item.chamado;
-            row.appendChild(chamadoCell);
- 
-            const nPostoCell = document.createElement('td');
-            nPostoCell.textContent = item.n_postto;
-            row.appendChild(nPostoCell);
- 
-            const nomePostoCell = document.createElement('td');
-            nomePostoCell.textContent = item.nome_posto;
-            row.appendChild(nomePostoCell);
- 
-            const diaCell = document.createElement('td');
-            diaCell.textContent = item.data;
-            row.appendChild(diaCell);
- 
-            const nomeEquipamentoCell = document.createElement('td');
-            nomeEquipamentoCell.textContent = item.nome_equipamento;
-            row.appendChild(nomeEquipamentoCell);
- 
-            const quantidadeCell = document.createElement('td');
-            quantidadeCell.textContent = item.quantitade;
-            row.appendChild(quantidadeCell);
- 
-            const coordenadorCell = document.createElement('td');
-            coordenadorCell.textContent = item.coordenador;
-            row.appendChild(coordenadorCell);
- 
-            const estatusCell = document.createElement('td');
-            estatusCell.textContent = item.estatus;
-            row.appendChild(estatusCell);
- 
-            const obsCell = document.createElement('td');
-            obsCell.textContent = item.obs;
-            row.appendChild(obsCell);
- 
+
+            row.innerHTML = `
+              <td>${item.chamado}</td>
+              <td>${item.n_postto}</td>
+              <td>${item.nome_posto}</td>
+              <td>${item.data}</td>
+              <td>${item.nome_equipamento}</td>
+              <td>${item.quantitade}</td>
+              <td>${item.coordenador}</td>
+              <td>${item.estatus}</td>
+              <td>${item.obs}</td>
+            `;
+
             tableBody.appendChild(row);
           });
         } else {
@@ -115,41 +117,72 @@
         console.error('Erro ao buscar dados:', error);
       }
     }
- 
-    window.onload = buscarDados;
+
+    function pesquisar() {
+      const filtro = document.getElementById('search-input').value.toLowerCase();
+      const linhas = document.querySelectorAll('#table-body tr');
+
+      linhas.forEach(linha => {
+        const idPosto = linha.cells[1].textContent.toLowerCase();
+        const nomePosto = linha.cells[2].textContent.toLowerCase();
+
+        if (idPosto.includes(filtro) || nomePosto.includes(filtro)) {
+          linha.style.display = '';
+        } else {
+          linha.style.display = 'none';
+        }
+      });
+    }
+
+    window.onload = function() {
+      buscarDados();
+      document.getElementById('search-input').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          pesquisar();
+        }
+      });
+    };
 </script>
 </head>
 <body>
     <div class="superior">
         <div class="logo">
         <h1>HISTORICO DE CHAMADOS</h1>
-    </div>
+        </div>
         <div class="logo3">
-        <img src="img/logor7.png" alt="logo" width="100px" height="100px">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+            </a>
+        </div>
     </div>
-    </div>
-  <div class="table-container">
-<table>
-<thead>
-<tr>
-<th>Chamado</th>
-<th>N° Posto</th>
-<th>Nome do Posto</th>
-<th>Data</th>
-<th>Nome do Equipamento</th>
-<th>Quantidade</th>
-<th>Coordenador</th>
-<th>Estatus</th>
-<th>Observações</th>
-</tr>
-</thead>
-<tbody id="table-body">
 
-</tbody>
-</table>
-</div>
-<div class="rodape">
-    <p>REDE 7 - Versão 2.0 | © Todos os direitos reservados.</p>
-</div>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Pesquisar pelo Nº ou Nome do Posto">
+      <button onclick="pesquisar()">Pesquisar</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Chamado</th>
+                    <th>Nº Posto</th>
+                    <th>Nome do Posto</th>
+                    <th>Data</th>
+                    <th>Nome do Equipamento</th>
+                    <th>Quantidade</th>
+                    <th>Coordenador</th>
+                    <th>Estatus</th>
+                    <th>Observações</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
+
+    <div class="rodape">
+        <p>REDE 7 - Versão 2.0 | © Todos os direitos reservados.</p>
+    </div>
 </body>
 </html>
