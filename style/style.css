@@ -50,8 +50,9 @@ h1 {
 
 .logo{
     display: flex;
-    align-items: end;
+    align-items: center;
     justify-content: space-between;
+    padding: 20px;
 }
 .rodape{
     display: flex;
