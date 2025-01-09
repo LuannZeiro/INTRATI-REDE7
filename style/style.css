@@ -48,11 +48,56 @@ h1 {
     background-color: #028108;
 }
 
+.search1 {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search1 input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 308px;
+    
+}
+.search1 button {
+    padding: 6px 12px;
+    background-color: #028108;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 300px;
+    height: 40px;
+}
+.search1 button:hover {
+    background-color: #028108;
+}
+
 .logo{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
+    padding: 20px 7px;
+}
+.logo2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo3{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 7px;
+}
+.superior{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
 }
 .rodape{
     display: flex;
@@ -66,9 +111,23 @@ h1 {
     color: white;
     border: none;
     border-radius: 4px;
-    width: 200px;
+    width: 1200px;
+    height: 70px;
+    font-size: large;
+   
 }
 
 .botaonet {
     padding: 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.formulario{
+    color: #028108;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
 }
