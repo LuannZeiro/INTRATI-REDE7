@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inserir Dados</title>
+<link rel="stylesheet" href="style/style.css">
+<script>
+    async function buscarNomePosto() {
+      const idPosto = document.getElementById('n_posto').value;
+      const nomePostoInput = document.getElementById('nome_posto');
+ 
+      if (!idPosto) {
+        alert('Por favor, insira o ID do posto.');
+        return;
+      }
+ 
+      try {
+        const response = await fetch(`http://172.20.20.213:3000/pi?id=${idPosto}`);
+        if (!response.ok) {
+          throw new Error('Erro ao buscar o nome do posto.');
+        }
+ 
+        const data = await response.json();
+        if (data.length > 0) {
+          nomePostoInput.value = data[0].nome;
+        } else {
+          alert('Nenhum posto encontrado com o ID informado.');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao buscar o nome do posto.');
+      }
+    }
+ 
+    async function enviarFormulario(event) {
+      event.preventDefault();
+ 
+      const chamado = document.getElementById('chamado').value;
+      const nPosto = document.getElementById('n_posto').value;
+      const nomePosto = document.getElementById('nome_posto').value;
+      const dia = document.getElementById('dia').value;
+      const nomeEquipamento = document.getElementById('nome_equipamento').value;
+      const quantidade = document.getElementById('quantidade').value;
+      const coordenador = document.getElementById('coordenador').value;
+      const estatus = document.getElementById('estatus').value;
+      const obs = document.getElementById('obs').value;
+ 
+      try {
+        const response = await fetch('http://172.20.20.213:8080/mapi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chamado,
+            n_posto: nPosto,
+            nome_posto: nomePosto,
+            dia,
+            nome_equipamento: nomeEquipamento,
+            quantidade,
+            coordenador,
+            estatus,
+            obs
+          })
+        });
+ 
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+          document.getElementById('formulario').reset();
+        } else {
+          alert(data.error || 'Erro ao inserir os dados.');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao inserir os dados.');
+      }
+    }
+</script>
+</head>
+<body>
+    <div class="logo">
+        <h1>Inserir Dados no Banco</h1>
+        <img src="img/logor7.png" alt="logo" width="150px" height="150px">
+    </div>
+<form id="formulario" onsubmit="enviarFormulario(event)">
+<label for="chamado">Chamado:</label>
+<input type="text" id="chamado" name="chamado" required><br><br>
+ 
+    <label for="n_posto">Número do Posto:</label>
+<input type="text" id="n_posto" name="n_posto" onblur="buscarNomePosto()" required><br><br>
+ 
+    <label for="nome_posto">Nome do Posto:</label>
+<input type="text" id="nome_posto" name="nome_posto" readonly required><br><br>
+ 
+    <label for="dia">Dia:</label>
+<input type="date" id="dia" name="dia" required><br><br>
+ 
+    <label for="nome_equipamento">Nome do Equipamento:</label>
+<input type="text" id="nome_equipamento" name="nome_equipamento" required><br><br>
+ 
+    <label for="quantidade">Quantidade:</label>
+<input type="number" id="quantidade" name="quantidade" required><br><br>
+ 
+    <label for="coordenador">Coordenador:</label>
+<input type="text" id="coordenador" name="coordenador" required><br><br>
+ 
+    <label for="estatus">Status:</label>
+<input type="text" id="estatus" name="estatus" required><br><br>
+ 
+    <label for="obs">Observações:</label>
+<textarea id="obs" name="obs"></textarea><br><br>
+ 
+    <button type="submit">Enviar</button>
+</form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="rodape">
+    <p>REDE 7 - Versão 1.2 | © Todos os direitos reservados.</p>
+</div>
+</body>
+</html>
