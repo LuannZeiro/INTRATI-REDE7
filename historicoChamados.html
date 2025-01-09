@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>historico de Chamados</title>
+<link rel="stylesheet" href="style/style.css">
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+ 
+    h1 {
+      color: #028108;
+      margin-top: 30px;
+      font-size: 2.5em;
+      text-align: center;
+      font-weight: bold;
+    }
+ 
+    .table-container {
+      width: 80%;
+      margin-top: 30px;
+      overflow-x: auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+ 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 16px;
+      text-align: left;
+    }
+ 
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+ 
+    th {
+      background-color: #028108;
+      color: white;
+      font-weight: bold;
+    }
+ 
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+ 
+    tr:hover {
+      background-color: #e1f5e1;
+    }
+ 
+    td {
+      background-color: #fafafa;
+    }
+</style>
+<script>
+    async function buscarDados() {
+      try {
+        const response = await fetch('http://172.20.20.213:8080/map');
+        const data = await response.json();
+ 
+        if (data && Array.isArray(data)) {
+          const tableBody = document.getElementById('table-body');
+          tableBody.innerHTML = '';
+ 
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            const chamadoCell = document.createElement('td');
+            chamadoCell.textContent = item.chamado;
+            row.appendChild(chamadoCell);
+ 
+            const nPostoCell = document.createElement('td');
+            nPostoCell.textContent = item.n_postto;
+            row.appendChild(nPostoCell);
+ 
+            const nomePostoCell = document.createElement('td');
+            nomePostoCell.textContent = item.nome_posto;
+            row.appendChild(nomePostoCell);
+ 
+            const diaCell = document.createElement('td');
+            diaCell.textContent = item.data;
+            row.appendChild(diaCell);
+ 
+            const nomeEquipamentoCell = document.createElement('td');
+            nomeEquipamentoCell.textContent = item.nome_equipamento;
+            row.appendChild(nomeEquipamentoCell);
+ 
+            const quantidadeCell = document.createElement('td');
+            quantidadeCell.textContent = item.quantitade;
+            row.appendChild(quantidadeCell);
+ 
+            const coordenadorCell = document.createElement('td');
+            coordenadorCell.textContent = item.coordenador;
+            row.appendChild(coordenadorCell);
+ 
+            const estatusCell = document.createElement('td');
+            estatusCell.textContent = item.estatus;
+            row.appendChild(estatusCell);
+ 
+            const obsCell = document.createElement('td');
+            obsCell.textContent = item.obs;
+            row.appendChild(obsCell);
+ 
+            tableBody.appendChild(row);
+          });
+        } else {
+          console.error('Erro ao formatar os dados:', data);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    }
+ 
+    window.onload = buscarDados;
+</script>
+</head>
+<body>
+ 
+    <div class="logo">
+        <h1>Historico de Chamados</h1>
+        <img src="img/logor7.png" alt="logo" width="150px" height="150px">
+    </div>
+ 
+  <div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Chamado</th>
+<th>N° Posto</th>
+<th>Nome do Posto</th>
+<th>Data</th>
+<th>Nome do Equipamento</th>
+<th>Quantidade</th>
+<th>Coordenador</th>
+<th>Estatus</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody id="table-body">
+
+</tbody>
+</table>
+</div>
+<div class="rodape">
+    <p>REDE 7 - Versão 1.3 | © Todos os direitos reservados.</p>
+</div>
+</body>
+</html>
