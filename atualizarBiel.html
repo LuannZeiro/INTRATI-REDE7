@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATUALIZAR CHAMADO - REDE 7</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #1b5e20;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #028108;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #028108;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #028108;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="superior">
+        <div class="logo">
+        <h1>ATUALIZAR CHAMADOS</h1>
+        </div>
+        <div class="logo3">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <form id="updateForm">
+            <label for="chamado">Chamado:</label>
+            <input type="text" id="chamado" name="chamado" required>
+
+            <label for="estatus">Status:</label>
+            <input type="text" id="estatus" name="estatus" required>
+
+            <label for="obs">Observações:</label>
+            <textarea id="obs" name="obs" rows="4" required></textarea>
+
+            <button type="submit">Atualizar</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('updateForm');
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const chamado = document.getElementById('chamado').value.trim();
+            const estatus = document.getElementById('estatus').value.trim();
+            const obs = document.getElementById('obs').value.trim();
+
+            try {
+                const response = await fetch('http://172.20.20.213:3000/map/update', {
+                    method: 'PUT', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ chamado, estatus, obs })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    messageDiv.style.color = 'green';
+                    messageDiv.textContent = 'Registro atualizado com sucesso!';
+                    form.reset();
+                } else {
+                    messageDiv.style.color = 'red';
+                    messageDiv.textContent = result.error || 'Erro ao atualizar o registro.';
+                }
+            } catch (error) {
+                messageDiv.style.color = 'red';
+                messageDiv.textContent = 'Erro ao conectar ao servidor.';
+                console.error('Erro:', error);
+            }
+        });
+    </script>
+</body>
+</html>
