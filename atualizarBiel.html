@@ -93,7 +93,7 @@
             const obs = document.getElementById('obs').value.trim();
 
             try {
-                const response = await fetch('http://172.20.20.213:3000/map/update', {
+                const response = await fetch('http://172.20.20.213:8080/map/update', {
                     method: 'PUT', 
                     headers: {
                         'Content-Type': 'application/json'
