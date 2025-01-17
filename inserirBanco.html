@@ -134,7 +134,7 @@
       const obs = document.getElementById('obs').value;
  
       try {
-        const response = await fetch('http://172.20.20.213:3000/mapi', {
+        const response = await fetch('http://172.20.20.213:8080/mapi', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
