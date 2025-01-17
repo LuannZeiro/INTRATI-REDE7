@@ -7,7 +7,6 @@
 <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
 <link rel="stylesheet" href="style/style.css">
 <style>
-   
     form {
       text-align: center;
       margin-bottom: 20px;
@@ -42,6 +41,11 @@
       background-color: #4CAF50;
       color: white;
     }
+    p{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     tr:hover {
       background-color: #f1f1f1;
     }
@@ -60,105 +64,103 @@
 <body>
     <div class="superior1">
         <div class="logo">
-        <h1>ANYDESK</h1>
-    </div>
+            <h1>ANYDESK</h1>
+        </div>
         <div class="logo3">
             <a href="index.html">
                 <img src="img/logor7.png" alt="logo" width="70px" height="70px">
-    </a>
+            </a>
+        </div>
     </div>
-    </div>
-<form id="filterForm">
-<input type="text" id="idInput" placeholder="Buscar por ID">
-<input type="text" id="postoInput" placeholder="Buscar por Posto">
-<button type="submit">Buscar</button>
-</form>
- 
-  <div id="message" class="loading">Carregando dados...</div>
-<table id="dataTable" style="display: none;">
-<thead>
-<tr id="tableHead">
-</tr>
-</thead>
-<tbody id="tableBody">
+    <form id="filterForm">
+        <input type="text" id="searchInput" placeholder="Buscar por ID ou Posto">
+        <button type="submit">Buscar</button>
+    </form>
 
-</tbody>
-</table>
- 
-  <script>
-    const apiUrl = 'http://172.20.20.213:8080/any';
- 
-    const form = document.getElementById('filterForm');
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
- 
-      const id = document.getElementById('idInput').value.trim();
-      const posto = document.getElementById('postoInput').value.trim();
- 
-      let queryUrl = apiUrl;
-      if (id || posto) {
-        queryUrl += '?';
-        if (id) queryUrl += `id=${id}`;
-        if (posto) queryUrl += `${id ? '&' : ''}posto=${encodeURIComponent(posto)}`;
-      }
- 
-      fetchData(queryUrl);
-    });
- 
-    async function fetchData(url) {
-      try {
-        document.getElementById('message').textContent = 'Carregando dados...';
-        document.getElementById('message').className = 'loading';
-        document.getElementById('dataTable').style.display = 'none';
- 
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados da API.');
-        }
- 
-        const data = await response.json();
-        populateTable(data);
-      } catch (error) {
-        document.getElementById('message').textContent = error.message;
-        document.getElementById('message').className = 'error';
-      }
-    }
- 
-    function populateTable(data) {
-      const message = document.getElementById('message');
-      const table = document.getElementById('dataTable');
-      const tableHead = document.getElementById('tableHead');
-      const tableBody = document.getElementById('tableBody');
- 
-      if (data.length === 0) {
-        message.textContent = 'Nenhum dado encontrado.';
-        return;
-      }
- 
-      message.style.display = 'none';
- 
-      tableHead.innerHTML = '';
-      tableBody.innerHTML = '';
- 
-      const headers = Object.keys(data[0]);
-      headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        tableHead.appendChild(th);
-      });
- 
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        headers.forEach(header => {
-          const td = document.createElement('td');
-          td.textContent = row[header] || '-';
-          tr.appendChild(td);
+    <div id="message" class="loading">Carregando dados...</div>
+    <table id="dataTable" style="display: none;">
+        <thead>
+            <tr id="tableHead"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script>
+        const apiUrl = 'http://172.20.20.213:8080/any';
+
+        const form = document.getElementById('filterForm');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const searchValue = document.getElementById('searchInput').value.trim();
+            let queryUrl = apiUrl;
+
+            if (searchValue) {
+                if (!isNaN(searchValue)) {
+                    queryUrl += `?id=${encodeURIComponent(searchValue)}`;
+                } else {
+                    queryUrl += `?posto=${encodeURIComponent(searchValue)}`;
+                }
+            }
+
+            fetchData(queryUrl);
         });
-        tableBody.appendChild(tr);
-      });
- 
-      table.style.display = 'table';
-    }
-</script>
+
+        async function fetchData(url) {
+            try {
+                document.getElementById('message').textContent = 'Carregando dados...';
+                document.getElementById('message').className = 'loading';
+                document.getElementById('dataTable').style.display = 'none';
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar dados da API.');
+                }
+
+                const data = await response.json();
+                populateTable(data);
+            } catch (error) {
+                document.getElementById('message').textContent = error.message;
+                document.getElementById('message').className = 'error';
+            }
+        }
+
+        function populateTable(data) {
+            const message = document.getElementById('message');
+            const table = document.getElementById('dataTable');
+            const tableHead = document.getElementById('tableHead');
+            const tableBody = document.getElementById('tableBody');
+
+            if (data.length === 0) {
+                message.textContent = 'Nenhum dado encontrado.';
+                return;
+            }
+
+            message.style.display = 'none';
+
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            const headers = Object.keys(data[0]);
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                tableHead.appendChild(th);
+            });
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header] || '-';
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+
+            table.style.display = 'table';
+        }
+    </script>
+    <p>REDE 7 - Versão 2.5 | © Todos os direitos reservados.</p>
 </body>
 </html>
