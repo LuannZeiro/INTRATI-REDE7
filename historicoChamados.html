@@ -85,7 +85,7 @@
 <script>
     async function buscarDados() {
       try {
-        const response = await fetch('http://172.20.20.127:8080/map');
+        const response = await fetch('http://172.20.20.127:3000/map');
         const data = await response.json();
 
         if (data && Array.isArray(data)) {
