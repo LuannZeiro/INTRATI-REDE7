@@ -85,7 +85,7 @@
 <script>
     async function buscarDados() {
       try {
-        const response = await fetch('http://172.20.20.213:8080/map');
+        const response = await fetch('http://172.20.20.127:8080/map');
         const data = await response.json();
 
         if (data && Array.isArray(data)) {
@@ -183,7 +183,7 @@
     </div>
 
     <div class="rodape">
-        <p>REDE 7 - Versão 2.5 | © Todos os direitos reservados.</p>
+        <p>REDE 7 - Versão 2.6 | © Todos os direitos reservados.</p>
     </div>
 </body>
 </html>

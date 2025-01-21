@@ -103,7 +103,7 @@
       }
  
       try {
-        const response = await fetch(`http://172.20.20.213:3000/pi?id=${idPosto}`);
+        const response = await fetch(`http://172.20.20.127:3000/pi?id=${idPosto}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar o nome do posto.');
         }
@@ -134,7 +134,7 @@
       const obs = document.getElementById('obs').value;
  
       try {
-        const response = await fetch('http://172.20.20.213:8080/mapi', {
+        const response = await fetch('http://172.20.20.127:8080/mapi', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -208,7 +208,7 @@
 </form>
 </div>
 <div class="rodape">
-    <p>REDE 7 - Versão 2.5 | © Todos os direitos reservados.</p>
+    <p>REDE 7 - Versão 2.6 | © Todos os direitos reservados.</p>
 </div>
 </body>
 </html>
