@@ -46,7 +46,7 @@
       display: block;
     }
  
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -162,6 +162,17 @@
         alert('Erro ao inserir os dados.');
       }
     }
+
+    window.onload = function() {
+      const hoje = new Date();
+      const dataFormatada = hoje.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+      const obsInput = document.getElementById('obs');
+      obsInput.value = `Solicitado Aprovação (${dataFormatada})`;
+    };
 </script>
 </head>
 <body>
@@ -180,35 +191,54 @@
 <label for="chamado">Chamado:</label>
 <input type="text" id="chamado" name="chamado" required><br>
  
-      <label for="n_posto">Número do Posto:</label>
+<label for="n_posto">Número do Posto:</label>
 <input type="text" id="n_posto" name="n_posto" onblur="buscarNomePosto()" required><br>
  
-      <label for="nome_posto">Nome do Posto:</label>
+<label for="nome_posto">Nome do Posto:</label>
 <input type="text" id="nome_posto" name="nome_posto" readonly required><br>
  
-      <label for="dia">Dia:</label>
+<label for="dia">Dia:</label>
 <input type="date" id="dia" name="dia" required><br>
  
-      <label for="nome_equipamento">Nome do Equipamento:</label>
-<input type="text" id="nome_equipamento" name="nome_equipamento" required><br>
+<label for="nome_equipamento">Nome do Equipamento:</label>
+<select id="nome_equipamento" name="nome_equipamento" required>
+  <option value="">Selecione um equipamento</option>
+  <option value="TECLADO">TECLADO</option>
+  <option value="MOUSE">MOUSE</option>
+  <option value="LEITOR DE CÓD DE BARRAS">LEITOR DE CÓD DE BARRAS</option>
+  <option value="MONITOR">MONITOR</option>
+</select><br>
  
-      <label for="quantidade">Quantidade:</label>
+<label for="quantidade">Quantidade:</label>
 <input type="number" id="quantidade" name="quantidade" required><br>
  
-      <label for="coordenador">Coordenador:</label>
-<input type="text" id="coordenador" name="coordenador" required><br>
+<label for="coordenador">Coordenador:</label>
+<select id="coordenador" name="coordenador" required>
+  <option value="">Selecione um coordenador</option>
+  <option value="Willian">Willian</option>
+  <option value="Mizael">Mizael</option>
+  <option value="Gabriel">Gabriel</option>
+  <option value="Sebastião">Sebastião</option>
+  <option value="Adriano">Adriano</option>
+  <option value="Diego">Diego</option>
+  <option value="Osvaldo">Osvaldo</option>
+  <option value="Joselita">Joselita</option>
+  <option value="Edivan">Edivan</option>
+  <option value="Rafael">Rafael</option>
+  <option value="Cleonilda">Cleonilda</option>
+</select><br>
  
-      <label for="estatus">Status:</label>
+<label for="estatus">Status:</label>
 <input type="text" id="estatus" name="estatus" required><br>
  
-      <label for="obs">Observações:</label>
+<label for="obs">Observações:</label>
 <textarea id="obs" name="obs"></textarea><br>
  
-      <button type="submit">Enviar</button>
+<button type="submit">Enviar</button>
 </form>
 </div>
 <div class="rodape">
-    <p>REDE 7 - Versão 2.6 | © Todos os direitos reservados.</p>
+    <p>REDE 7 - Versão 2.8 | © Todos os direitos reservados.</p>
 </div>
 </body>
 </html>
