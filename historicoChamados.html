@@ -83,68 +83,70 @@
     }
 </style>
 <script>
-    async function buscarDados() {
+  async function buscarDados() {
       try {
-        const response = await fetch('http://172.20.20.127:3000/map');
-        const data = await response.json();
+          const response = await fetch('http://172.20.20.127:3000/map');
+          const data = await response.json();
 
-        if (data && Array.isArray(data)) {
-          const tableBody = document.getElementById('table-body');
-          tableBody.innerHTML = '';
+          if (data && Array.isArray(data)) {
+              const tableBody = document.getElementById('table-body');
+              tableBody.innerHTML = '';
 
-          const sortedData = data.sort((a, b) => new Date(b.data) - new Date(a.data));
+              const sortedData = data.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-          sortedData.forEach(item => {
-            const row = document.createElement('tr');
+              sortedData.forEach(item => {
+                  const row = document.createElement('tr');
 
-            row.innerHTML = `
-              <td>${item.chamado}</td>
-              <td>${item.n_postto}</td>
-              <td>${item.nome_posto}</td>
-              <td>${item.data}</td>
-              <td>${item.nome_equipamento}</td>
-              <td>${item.quantitade}</td>
-              <td>${item.coordenador}</td>
-              <td>${item.estatus}</td>
-              <td>${item.obs}</td>
-            `;
+                  row.innerHTML = `
+                      <td>${item.chamado}</td>
+                      <td>${item.n_postto}</td>
+                      <td>${item.nome_posto}</td>
+                      <td>${item.data}</td>
+                      <td>${item.nome_equipamento}</td>
+                      <td>${item.quantitade}</td>
+                      <td>${item.coordenador}</td>
+                      <td>${item.estatus}</td>
+                      <td>${item.obs}</td>
+                  `;
 
-            tableBody.appendChild(row);
-          });
-        } else {
-          console.error('Erro ao formatar os dados:', data);
-        }
+                  tableBody.appendChild(row);
+              });
+          } else {
+              console.error('Erro ao formatar os dados:', data);
+          }
       } catch (error) {
-        console.error('Erro ao buscar dados:', error);
+          console.error('Erro ao buscar dados:', error);
       }
-    }
+  }
 
-    function pesquisar() {
+  function pesquisar() {
       const filtro = document.getElementById('search-input').value.toLowerCase();
       const linhas = document.querySelectorAll('#table-body tr');
 
       linhas.forEach(linha => {
-        const idPosto = linha.cells[1].textContent.toLowerCase();
-        const nomePosto = linha.cells[2].textContent.toLowerCase();
+          const numeroChamado = linha.cells[0].textContent.toLowerCase();
+          const idPosto = linha.cells[1].textContent.toLowerCase();
+          const nomePosto = linha.cells[2].textContent.toLowerCase();
 
-        if (idPosto.includes(filtro) || nomePosto.includes(filtro)) {
-          linha.style.display = '';
-        } else {
-          linha.style.display = 'none';
-        }
+          if (numeroChamado.includes(filtro) || idPosto.includes(filtro) || nomePosto.includes(filtro)) {
+              linha.style.display = '';
+          } else {
+              linha.style.display = 'none';
+          }
       });
-    }
+  }
 
-    window.onload = function() {
+  window.onload = function() {
       buscarDados();
       document.getElementById('search-input').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          pesquisar();
-        }
+          if (event.key === 'Enter') {
+              event.preventDefault();
+              pesquisar();
+          }
       });
-    };
+  };
 </script>
+
 </head>
 <body>
     <div class="superior">
@@ -181,7 +183,6 @@
             <tbody id="table-body"></tbody>
         </table>
     </div>
-
     <div class="rodape">
         <p>REDE 7 - Versão 2.8 | © Todos os direitos reservados.</p>
     </div>
