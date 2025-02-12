@@ -73,6 +73,15 @@
             <label for="estatus">Status:</label>
             <input type="text" id="estatus" name="estatus" required>
 
+            <label for="data_aprovacao">Aprovado dia:</label>
+            <input type="date" id="data_aprovacao" name="data_aprovacao" required>
+
+            <label for="data_compras">Comprado dia:</label>
+            <input type="date" id="data_compras" name="data_compras" required>
+ 
+            <label for="data_envio">Enviado dia:</label>
+            <input type="date" id="data_envio" name="data_envio" required>
+
             <label for="obs">Observações:</label>
             <textarea id="obs" name="obs" rows="4" required></textarea>
 
@@ -90,6 +99,9 @@
 
             const chamado = document.getElementById('chamado').value.trim();
             const estatus = document.getElementById('estatus').value.trim();
+            const data_aprovacao = document.getElementById('data_aprovacao').value.trim();
+            const data_compras = document.getElementById('data_compras').value.trim();
+            const data_envio = document.getElementById('data_envio').value.trim();
             const obs = document.getElementById('obs').value.trim();
 
             try {
@@ -98,7 +110,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ chamado, estatus, obs })
+                    body: JSON.stringify({ chamado, estatus, data_aprovacao, data_compras, data_envio, obs})
                 });
 
                 const result = await response.json();

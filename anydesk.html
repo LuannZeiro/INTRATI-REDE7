@@ -7,64 +7,82 @@
 <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
 <link rel="stylesheet" href="style/style.css">
 <style>
-    form {
-      text-align: center;
-      margin-bottom: 20px;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
     }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+    form {
+        margin-bottom: 20px;
+    }
+    input, button, select {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
     }
     button {
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
     }
     button:hover {
-      background-color: #45a049;
+        background-color: #45a049;
     }
     table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    td{
-        width: 70px;
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
     }
     th {
-      background-color: #4CAF50;
-      color: white;
-    }
-    p{
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background-color: #4CAF50;
+        color: white;
     }
     tr:hover {
-      background-color: #f1f1f1;
+        background-color: #f1f1f1;
     }
     .loading {
-      text-align: center;
-      font-size: 18px;
-      color: #888;
+        text-align: center;
+        font-size: 18px;
+        color: #888;
     }
     .error {
-      text-align: center;
-      font-size: 18px;
-      color: red;
+        text-align: center;
+        font-size: 18px;
+        color: red;
+    }
+    /* Janela fixa para atualização */
+    .update-window {
+        display: none;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -20%);
+        width: 300px;
+        background: white;
+        padding: 20px;
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+        border-radius: 8px;
+        text-align: center;
+    }
+    .update-window input {
+        width: 90%;
+    }
+    .close-btn {
+        background: red;
     }
 </style>
 </head>
 <body>
+
     <div class="superior1">
         <div class="logo">
             <h1>ANYDESK</h1>
@@ -75,9 +93,11 @@
             </a>
         </div>
     </div>
+
     <form id="filterForm">
         <input type="text" id="searchInput" placeholder="Buscar por ID ou Posto">
         <button type="submit">Buscar</button>
+        <button type="button" id="openUpdateWindow">Atualizar Número</button>
     </form>
 
     <div id="message" class="loading">Carregando dados...</div>
@@ -88,69 +108,64 @@
         <tbody id="tableBody"></tbody>
     </table>
 
+    <!-- Janela fixa para atualização -->
+    <div id="updateWindow" class="update-window">
+        <h3>Atualizar PDV</h3>
+        <input type="text" id="postoInput" placeholder="Número do posto">
+        <input type="text" id="pdvInput" placeholder="PDV (ex: pdv1, pdv2)">
+        <input type="text" id="newNumberInput" placeholder="Novo número">
+        <button id="submitUpdate">Atualizar</button>
+        <button class="close-btn" id="closeWindow">Fechar</button>
+    </div>
+
     <script>
         const apiUrl = 'http://172.20.20.127:3000/any';
 
-        const form = document.getElementById('filterForm');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
+        // Buscar dados na API ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData(apiUrl);
+        });
 
+        document.getElementById('filterForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
             const searchValue = document.getElementById('searchInput').value.trim();
             let queryUrl = apiUrl;
-
             if (searchValue) {
-                if (!isNaN(searchValue)) {
-                    queryUrl += `?id=${encodeURIComponent(searchValue)}`;
-                } else {
-                    queryUrl += `?posto=${encodeURIComponent(searchValue)}`;
-                }
+                queryUrl += !isNaN(searchValue) ? `?id=${encodeURIComponent(searchValue)}` : `?posto=${encodeURIComponent(searchValue)}`;
             }
-
             fetchData(queryUrl);
         });
 
         async function fetchData(url) {
             try {
                 document.getElementById('message').textContent = 'Carregando dados...';
-                document.getElementById('message').className = 'loading';
                 document.getElementById('dataTable').style.display = 'none';
-
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar dados da API.');
-                }
-
+                if (!response.ok) throw new Error('Erro ao buscar dados da API.');
                 const data = await response.json();
                 populateTable(data);
             } catch (error) {
                 document.getElementById('message').textContent = error.message;
-                document.getElementById('message').className = 'error';
             }
         }
 
         function populateTable(data) {
-            const message = document.getElementById('message');
             const table = document.getElementById('dataTable');
             const tableHead = document.getElementById('tableHead');
             const tableBody = document.getElementById('tableBody');
-
             if (data.length === 0) {
-                message.textContent = 'Nenhum dado encontrado.';
+                document.getElementById('message').textContent = 'Nenhum dado encontrado.';
                 return;
             }
-
-            message.style.display = 'none';
-
+            document.getElementById('message').style.display = 'none';
             tableHead.innerHTML = '';
             tableBody.innerHTML = '';
-
             const headers = Object.keys(data[0]);
             headers.forEach(header => {
                 const th = document.createElement('th');
                 th.textContent = header;
                 tableHead.appendChild(th);
             });
-
             data.forEach(row => {
                 const tr = document.createElement('tr');
                 headers.forEach(header => {
@@ -160,14 +175,45 @@
                 });
                 tableBody.appendChild(tr);
             });
-
             table.style.display = 'table';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchData(apiUrl);
+        document.getElementById('openUpdateWindow').addEventListener('click', () => {
+            document.getElementById('updateWindow').style.display = 'block';
+        });
+
+        document.getElementById('closeWindow').addEventListener('click', () => {
+            document.getElementById('updateWindow').style.display = 'none';
+        });
+
+        document.getElementById('submitUpdate').addEventListener('click', async () => {
+            const posto = document.getElementById('postoInput').value.trim();
+            let pdv = document.getElementById('pdvInput').value.trim();
+            const newNumber = document.getElementById('newNumberInput').value.trim();
+
+            if (!posto || !pdv || !newNumber) return alert('Todos os campos são obrigatórios.');
+
+            const pdvMatch = /^pdv(\d+)$/.exec(pdv.toLowerCase());
+            if (!pdvMatch) return alert('O PDV deve estar no formato "pdvX".');
+            pdv = `pdv${pdvMatch[1]}`;
+
+            try {
+                const response = await fetch('http://172.20.20.127:3000/update-pdv', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ posto, pdv, newNumber })
+                });
+
+                if (!response.ok) throw new Error('Erro ao atualizar o PDV.');
+                
+                alert(`PDV atualizado para ${newNumber}`);
+                fetchData(apiUrl);
+                document.getElementById('updateWindow').style.display = 'none';
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
         });
     </script>
-    <p>REDE 7 - Versão 3.0 | © Todos os direitos reservados.</p>
+
 </body>
 </html>
