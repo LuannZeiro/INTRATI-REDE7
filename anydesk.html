@@ -213,6 +213,17 @@
                 alert('Erro: ' + error.message);
             }
         });
+
+        // Adicionar evento de clique nas células da tabela para copiar o texto
+        document.getElementById('dataTable').addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'TD') { // Verifica se foi clicada uma célula da tabela
+                const textToCopy = target.textContent.trim();
+                if (textToCopy) {
+                    navigator.clipboard.writeText(textToCopy);
+                }
+            }
+        });
     </script>
 
 </body>

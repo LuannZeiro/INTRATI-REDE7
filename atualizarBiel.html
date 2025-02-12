@@ -56,7 +56,7 @@
 <body>
     <div class="superior">
         <div class="logo">
-        <h1>ATUALIZAR CHAMADOS</h1>
+            <h1>ATUALIZAR CHAMADOS</h1>
         </div>
         <div class="logo3">
             <a href="index.html">
@@ -74,13 +74,13 @@
             <input type="text" id="estatus" name="estatus" required>
 
             <label for="data_aprovacao">Aprovado dia:</label>
-            <input type="date" id="data_aprovacao" name="data_aprovacao" required>
+            <input type="date" id="data_aprovacao" name="data_aprovacao">
 
             <label for="data_compras">Comprado dia:</label>
-            <input type="date" id="data_compras" name="data_compras" required>
- 
+            <input type="date" id="data_compras" name="data_compras">
+
             <label for="data_envio">Enviado dia:</label>
-            <input type="date" id="data_envio" name="data_envio" required>
+            <input type="date" id="data_envio" name="data_envio">
 
             <label for="obs">Observações:</label>
             <textarea id="obs" name="obs" rows="4" required></textarea>
@@ -104,13 +104,17 @@
             const data_envio = document.getElementById('data_envio').value.trim();
             const obs = document.getElementById('obs').value.trim();
 
+            const payload = { chamado, estatus, obs };
+
+            if (data_aprovacao) payload.data_aprovacao = data_aprovacao;
+            if (data_compras) payload.data_compras = data_compras;
+            if (data_envio) payload.data_envio = data_envio;
+
             try {
                 const response = await fetch('http://172.20.20.127:3000/map/update', {
-                    method: 'PUT', 
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ chamado, estatus, data_aprovacao, data_compras, data_envio, obs})
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
 
                 const result = await response.json();
