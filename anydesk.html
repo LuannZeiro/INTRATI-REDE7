@@ -97,7 +97,7 @@
         <input type="text" id="searchInput" placeholder="Buscar por ID ou Posto">
         <button type="submit">Buscar</button>
         <button type="button" id="openUpdateWindow">Atualizar Número</button>
-        <button type="button">Abrir PDV</button>
+        <button type="button" id="openPDVButton">Como Abrir o PDV?</button>
     </form>
 
     <div id="message" class="loading">Carregando dados...</div>
@@ -222,6 +222,15 @@
             }
         });
 
+        document.getElementById('openPDVButton').addEventListener('click', () => {
+            const event = new KeyboardEvent('keydown', {
+                key: 'n',
+                ctrlKey: true,
+                altKey: true
+            });
+            document.dispatchEvent(event);
+            alert('Primeiro abra o script. Para abrir o PDV clique primeiro no número desejado e depois aperte CTRL + ALT + N');
+        });
 
     </script>
 

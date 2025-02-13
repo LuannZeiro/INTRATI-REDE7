@@ -99,18 +99,18 @@
                   const row = document.createElement('tr');
 
                   row.innerHTML = `
-                      <td>${item.chamado}</td>
-                      <td>${item.n_postto}</td>
-                      <td>${item.nome_posto}</td>
-                      <td>${item.data}</td>
-                      <td>${item.nome_equipamento}</td>
-                      <td>${item.quantitade}</td>
-                      <td>${item.coordenador}</td>
-                      <td>${item.estatus}</td>
-                      <td>${item.data_aprovacao}</td>
-                      <td>${item.data_compra}</td>
-                      <td>${item.data_envio}</td>
-                      <td>${item.obs}</td>
+                      <td>${item.chamado || ''}</td>
+                      <td>${item.n_postto || ''}</td>
+                      <td>${item.nome_posto || ''}</td>
+                      <td>${item.data || ''}</td>
+                      <td>${item.nome_equipamento || ''}</td>
+                      <td>${item.quantitade || ''}</td>
+                      <td>${item.coordenador || ''}</td>
+                      <td>${item.estatus || ''}</td>
+                      <td>${item.data_aprovacao || ''}</td>
+                      <td>${item.data_compra || ''}</td>
+                      <td>${item.data_envio || ''}</td>
+                      <td>${item.obs || ''}</td>
                   `;
 
                   tableBody.appendChild(row);
