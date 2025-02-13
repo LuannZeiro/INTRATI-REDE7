@@ -22,12 +22,12 @@
         border-radius: 4px;
     }
     button {
-        background-color: #4CAF50;
+        background-color: #028108;
         color: white;
         cursor: pointer;
     }
     button:hover {
-        background-color: #45a049;
+        background-color: #026b06;
     }
     table {
         width: 90%;
@@ -59,7 +59,6 @@
         font-size: 18px;
         color: red;
     }
-    /* Janela fixa para atualização */
     .update-window {
         display: none;
         position: fixed;
@@ -109,7 +108,6 @@
         <tbody id="tableBody"></tbody>
     </table>
 
-    <!-- Janela fixa para atualização -->
     <div id="updateWindow" class="update-window">
         <h3>Atualizar PDV</h3>
         <input type="text" id="postoInput" placeholder="Número do posto">
@@ -122,7 +120,6 @@
     <script>
         const apiUrl = 'http://172.20.20.127:3000/any';
 
-        // Buscar dados na API ao carregar a página
         document.addEventListener('DOMContentLoaded', () => {
             fetchData(apiUrl);
         });
@@ -215,10 +212,9 @@
             }
         });
 
-        // Adicionar evento de clique nas células da tabela para copiar o texto
         document.getElementById('dataTable').addEventListener('click', (event) => {
             const target = event.target;
-            if (target.tagName === 'TD') { // Verifica se foi clicada uma célula da tabela
+            if (target.tagName === 'TD') {
                 const textToCopy = target.textContent.trim();
                 if (textToCopy) {
                     navigator.clipboard.writeText(textToCopy);
