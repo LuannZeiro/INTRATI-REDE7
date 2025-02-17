@@ -15,7 +15,6 @@
       padding: 0;
     }
 
-    /* Estilização do Formulário */
     .form-container {
       display: flex;
       justify-content: center;
@@ -35,7 +34,7 @@
       font-size: 16px;
       min-width: 150px;
       max-width: 400px;
-      white-space: nowrap;  /* Evita quebras de linha no conteúdo */
+      white-space: nowrap; 
     }
 
     select {
@@ -60,7 +59,6 @@
       background-color: #026b06;
     }
 
-    /* Estilização da Tabela */
     .table-container {
       width: 95%;
       margin: auto;
@@ -78,7 +76,7 @@
       padding: 15px;
       border-bottom: 1px solid #ddd;
       text-align: left;
-      white-space: nowrap;  /* Evita quebra de linha nas células da tabela */
+      white-space: nowrap;
     }
 
     th {
@@ -150,7 +148,6 @@
     </div>
   </div>
 
-  <!-- Formulário de Busca e Botões -->
   <div class="form-container">
     <input type="text" id="searchInput" placeholder="Buscar por ID ou Posto">
     <button class="btn" onclick="buscarDados()">Buscar</button>
@@ -159,7 +156,6 @@
 
   <div id="message"></div>
 
-  <!-- Tabela Responsiva -->
   <div class="table-container">
     <table id="dataTable" style="display: none;">
       <thead>
@@ -250,33 +246,39 @@
     }
 
     async function atualizarPDV() {
-      const id = document.getElementById('updateId').value.trim();
-      const pdv = document.getElementById('updatePdv').value.trim();
-      const valor = document.getElementById('updateValor').value.trim();
+  const id = document.getElementById('updateId').value.trim();
+  const pdv = document.getElementById('updatePdv').value.trim();
+  let valor = document.getElementById('updateValor').value.trim();
 
-      if (!id || !pdv || !valor) {
-        alert("Todos os campos são obrigatórios!");
-        return;
-      }
+  if (!id || !pdv) {
+    alert("ID e PDV são obrigatórios!");
+    return;
+  }
 
-      try {
-        const response = await fetch(updateUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, pdv, valor })
-        });
-        const result = await response.json();
-        if (response.ok) {
-          alert(result.message);
-          fecharPopup();
-          fetchData(apiUrl);
-        } else {
-          alert(result.error);
-        }
-      } catch (error) {
-        alert("Erro ao atualizar PDV.");
-      }
+  // Define "-" como valor padrão caso esteja vazio
+  if (valor === "") {
+    valor = "-";
+  }
+
+  try {
+    const response = await fetch(updateUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, pdv, valor })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      alert(result.message);
+      fecharPopup();
+      fetchData(apiUrl);
+    } else {
+      alert(result.error);
     }
+  } catch (error) {
+    alert("Erro ao atualizar PDV.");
+  }
+}
+
 
     function abrirPopup() {
       document.getElementById('popup').style.display = 'flex';
