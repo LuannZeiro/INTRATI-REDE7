@@ -1,238 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anydesk - REDE 7</title>
-<link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
-<link rel="stylesheet" href="style/style.css">
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANYDESK - REDE 7</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
-    form {
-        margin-bottom: 20px;
+
+    /* Estilização do Formulário */
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px auto;
+      width: 98%;
+      max-width: 900px;
     }
-    input, button, select {
-        padding: 10px;
-        margin: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+
+    input,
+    select {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      min-width: 150px;
+      max-width: 400px;
+      white-space: nowrap;  /* Evita quebras de linha no conteúdo */
     }
-    button {
-        background-color: #028108;
-        color: white;
-        cursor: pointer;
+
+    select {
+      background-color: white;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
     }
-    button:hover {
-        background-color: #026b06;
+
+    .btn {
+      padding: 10px 15px;
+      background-color: #028108;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
     }
+
+    .btn:hover {
+      background-color: #026b06;
+    }
+
+    /* Estilização da Tabela */
+    .table-container {
+      width: 95%;
+      margin: auto;
+      overflow-x: auto;
+    }
+
     table {
-        width: 100%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
     th, td {
-        padding: 10px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        cursor: pointer;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      white-space: nowrap;  /* Evita quebra de linha nas células da tabela */
     }
+
     th {
-        background-color: #028108;
-        color: white;
+      background-color: #028108;
+      color: white;
     }
-    tr:hover {
-        background-color: #f1f1f1;
+
+    @media screen and (max-width: 600px) {
+      .form-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input, select {
+        width: 100%;
+      }
     }
-    .loading {
-        text-align: center;
-        font-size: 18px;
-        color: #888;
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
     }
-    .error {
-        text-align: center;
-        font-size: 18px;
-        color: red;
+
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
-    .update-window {
-        display: none;
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translate(-50%, -20%);
-        width: 300px;
-        background: white;
-        padding: 20px;
-        box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-        border-radius: 8px;
-        text-align: center;
+
+    .popup-content input,
+    .popup-content select {
+      width: 95%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
     }
-    .update-window input {
-        width: 90%;
-    }
+
     .close-btn {
-        background: red;
+      background-color: red;
     }
-</style>
+
+    .close-btn:hover {
+      background-color: darkred;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="superior1">
-        <div class="logo">
-            <h1>ANYDESK</h1>
-        </div>
-        <div class="logo3">
-            <a href="index.html">
-                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
-            </a>
-        </div>
+  <div class="superior1">
+    <div class="logo">
+      <h1>ANYDESK</h1>
     </div>
+    <div class="logo3">
+      <a href="index.html">
+        <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+      </a>
+    </div>
+  </div>
 
-    <form id="filterForm">
-        <input type="text" id="searchInput" placeholder="Buscar por ID ou Posto">
-        <button type="submit">Buscar</button>
-        <button type="button" id="openUpdateWindow">Atualizar Número</button>
-        <button type="button" id="openPDVButton">Como Abrir o PDV?</button>
-    </form>
+  <!-- Formulário de Busca e Botões -->
+  <div class="form-container">
+    <input type="text" id="searchInput" placeholder="Buscar por ID ou Posto">
+    <button class="btn" onclick="buscarDados()">Buscar</button>
+    <button class="btn btn-small" onclick="abrirPopup()">Atualizar PDV</button>
+  </div>
 
-    <div id="message" class="loading">Carregando dados...</div>
+  <div id="message"></div>
+
+  <!-- Tabela Responsiva -->
+  <div class="table-container">
     <table id="dataTable" style="display: none;">
-        <thead>
-            <tr id="tableHead"></tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
+      <thead>
+        <tr id="tableHead"></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
     </table>
+  </div>
 
-    <div id="updateWindow" class="update-window">
-        <h3>Atualizar PDV</h3>
-        <input type="text" id="postoInput" placeholder="Número do posto">
-        <input type="text" id="pdvInput" placeholder="PDV (ex: pdv1, pdv2)">
-        <input type="text" id="newNumberInput" placeholder="Novo número">
-        <button id="submitUpdate">Atualizar</button>
-        <button class="close-btn" id="closeWindow">Fechar</button>
+ 
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h3>Atualizar PDV</h3>
+      <input type="text" id="updateId" placeholder="ID">
+      <select id="updatePdv">
+        <option value="" disabled selected>SELECIONE O PDV</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
+      <input type="text" id="updateValor" placeholder="Valor">
+      <button class="btn btn-small" onclick="atualizarPDV()">Salvar</button>
+      <button class="btn btn-small close-btn" onclick="fecharPopup()">Fechar</button>
     </div>
+  </div>
 
-    <script>
-        const apiUrl = 'http://172.20.20.127:3000/any';
+  <script>
+    const apiUrl = 'http://172.20.20.127:3000/any';
+    const updateUrl = 'http://172.20.20.127:3000/update-pdv';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchData(apiUrl);
-        });
-
-        document.getElementById('filterForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const searchValue = document.getElementById('searchInput').value.trim();
-            let queryUrl = apiUrl;
-            if (searchValue) {
-                queryUrl += !isNaN(searchValue) ? `?id=${encodeURIComponent(searchValue)}` : `?posto=${encodeURIComponent(searchValue)}`;
-            }
-            fetchData(queryUrl);
-        });
-
-        async function fetchData(url) {
-            try {
-                document.getElementById('message').textContent = 'Carregando dados...';
-                document.getElementById('dataTable').style.display = 'none';
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Erro ao buscar dados da API.');
-                const data = await response.json();
-                populateTable(data);
-            } catch (error) {
-                document.getElementById('message').textContent = error.message;
-            }
+    function buscarDados() {
+      const searchValue = document.getElementById('searchInput').value.trim();
+      let queryUrl = apiUrl;
+      if (searchValue) {
+        if (!isNaN(searchValue)) {
+          queryUrl += `?id=${searchValue}`;
+        } else {
+          queryUrl += `?posto=${encodeURIComponent(searchValue)}`;
         }
+      }
+      fetchData(queryUrl);
+    }
 
-        function populateTable(data) {
-            const table = document.getElementById('dataTable');
-            const tableHead = document.getElementById('tableHead');
-            const tableBody = document.getElementById('tableBody');
-            if (data.length === 0) {
-                document.getElementById('message').textContent = 'Nenhum dado encontrado.';
-                return;
-            }
-            document.getElementById('message').style.display = 'none';
-            tableHead.innerHTML = '';
-            tableBody.innerHTML = '';
-            const headers = Object.keys(data[0]);
-            headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header;
-                tableHead.appendChild(th);
-            });
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                headers.forEach(header => {
-                    const td = document.createElement('td');
-                    td.textContent = row[header] || '-';
-                    tr.appendChild(td);
-                });
-                tableBody.appendChild(tr);
-            });
-            table.style.display = 'table';
+    async function fetchData(url) {
+      try {
+        document.getElementById('message').textContent = 'Carregando...';
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erro ao buscar dados.');
+        const data = await response.json();
+        populateTable(data);
+      } catch (error) {
+        document.getElementById('message').textContent = error.message;
+      }
+    }
+
+    function populateTable(data) {
+      const table = document.getElementById('dataTable');
+      const tableHead = document.getElementById('tableHead');
+      const tableBody = document.getElementById('tableBody');
+
+      if (data.length === 0) {
+        document.getElementById('message').textContent = 'Nenhum dado encontrado.';
+        return;
+      }
+
+      document.getElementById('message').style.display = 'none';
+      tableHead.innerHTML = '';
+      tableBody.innerHTML = '';
+      const headers = Object.keys(data[0]);
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        tableHead.appendChild(th);
+      });
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(header => {
+          const td = document.createElement('td');
+          td.textContent = row[header] || '-';
+          tr.appendChild(td);
+        });
+        tableBody.appendChild(tr);
+      });
+      table.style.display = 'table';
+    }
+
+    async function atualizarPDV() {
+      const id = document.getElementById('updateId').value.trim();
+      const pdv = document.getElementById('updatePdv').value.trim();
+      const valor = document.getElementById('updateValor').value.trim();
+
+      if (!id || !pdv || !valor) {
+        alert("Todos os campos são obrigatórios!");
+        return;
+      }
+
+      try {
+        const response = await fetch(updateUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, pdv, valor })
+        });
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+          fecharPopup();
+          fetchData(apiUrl);
+        } else {
+          alert(result.error);
         }
+      } catch (error) {
+        alert("Erro ao atualizar PDV.");
+      }
+    }
 
-        document.getElementById('openUpdateWindow').addEventListener('click', () => {
-            document.getElementById('updateWindow').style.display = 'block';
-        });
+    function abrirPopup() {
+      document.getElementById('popup').style.display = 'flex';
+    }
 
-        document.getElementById('closeWindow').addEventListener('click', () => {
-            document.getElementById('updateWindow').style.display = 'none';
-        });
+    function fecharPopup() {
+      document.getElementById('popup').style.display = 'none';
+    }
 
-        document.getElementById('submitUpdate').addEventListener('click', async () => {
-            const posto = document.getElementById('postoInput').value.trim();
-            let pdv = document.getElementById('pdvInput').value.trim();
-            const newNumber = document.getElementById('newNumberInput').value.trim();
+    document.getElementById('searchInput').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        buscarDados();
+      }
+    });
 
-            if (!posto || !pdv || !newNumber) return alert('Todos os campos são obrigatórios.');
-
-            const pdvMatch = /^pdv(\d+)$/.exec(pdv.toLowerCase());
-            if (!pdvMatch) return alert('O PDV deve estar no formato "pdvX".');
-            pdv = `pdv${pdvMatch[1]}`;
-
-            try {
-                const response = await fetch('http://172.20.20.127:3000/update-pdv', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ posto, pdv, newNumber })
-                });
-
-                if (!response.ok) throw new Error('Erro ao atualizar o PDV.');
-                
-                alert(`PDV atualizado para ${newNumber}`);
-                fetchData(apiUrl);
-                document.getElementById('updateWindow').style.display = 'none';
-            } catch (error) {
-                alert('Erro: ' + error.message);
-            }
-        });
-
-        document.getElementById('dataTable').addEventListener('click', (event) => {
-            const target = event.target;
-            if (target.tagName === 'TD') {
-                const textToCopy = target.textContent.trim();
-                if (textToCopy) {
-                    navigator.clipboard.writeText(textToCopy);
-                }
-            }
-        });
-
-        document.getElementById('openPDVButton').addEventListener('click', () => {
-            const event = new KeyboardEvent('keydown', {
-                key: 'n',
-                ctrlKey: true,
-                altKey: true
-            });
-            document.dispatchEvent(event);
-            alert('Primeiro abra o script. Para abrir o PDV clique primeiro no número desejado e depois aperte CTRL + ALT + N');
-        });
-
-    </script>
-
+    fetchData(apiUrl);
+  </script>
 </body>
 </html>
