@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Termo de Responsabilidade</title>
+    <link rel="stylesheet" href="style/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea, button {
+            width: 97%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+       
+        button {
+            width: 100%;
+            background-color: #028108;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #1b4f35;
+        }
+        .btn-secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background-color: #bbb;
+        }
+        .loading, .error-message, .success-message {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .loading {
+            display: none;
+        }
+        .error-message {
+            color: red;
+        }
+        .success-message {
+            color: green;
+        }
+
+        @media (max-width: 1080px){
+            h1{
+                font-size: 12px;
+            }
+            img{
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="superior1">
+        <div class="logo">
+        <h1>GERAR TERMO DE RESPONSABILIDADE</h1>
+    </div>
+        <div class="logo3">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+    </a>
+    </div>
+    </div>
+    <form id="generate-pdf-form">
+        <label for="postoId">ID do Posto:</label>
+        <input type="text" id="postoId" name="postoId" required placeholder="Digite o ID do posto">
+
+        <button type="button" id="buscarPostoBtn">Buscar Posto</button>
+
+        <label for="solicitante">Solicitante:</label>
+        <input type="text" id="solicitante" name="solicitante" required placeholder="Nome do solicitante">
+
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" name="endereco" required placeholder="Endereço do local">
+
+        <label for="contatos">Contato(s):</label>
+        <input type="text" id="contatos" name="contatos" required placeholder="Número(s) de contato">
+
+        <label for="gerente">Gerente:</label>
+        <input type="text" id="gerente" name="gerente" required placeholder="Nome do gerente">
+
+        <label for="marcaModelo">Marca e Modelo:</label>
+        <input type="text" id="marcaModelo" name="marcaModelo" required placeholder="Marca e modelo do equipamento">
+
+        <label for="acessorios">Acessórios:</label>
+        <input type="text" id="acessorios" name="acessorios" required placeholder="Descrição dos acessórios">
+
+        <label for="patrimonio">Número de Patrimônio:</label>
+        <input type="text" id="patrimonio" name="patrimonio" readonly required>
+
+        <label for="dataSaida">Data da Saída:</label>
+        <input type="text" id="dataSaida" name="dataSaida" readonly required>
+
+        <label for="finalidade">Finalidade de Uso:</label>
+        <input type="text" id="finalidade" name="finalidade" required placeholder="Finalidade do uso">
+
+        <label for="local">Local de Uso:</label>
+        <select id="local" name="local" required>
+            <option value="posto">Posto</option>
+            <option value="escritorio">Escritório</option>
+        </select>
+
+        <label for="numeroTermo">Número do Termo:</label>
+        <input type="text" id="numeroTermo" name="numeroTermo" readonly required>
+
+        <label for="dataAssinatura">Data de Assinatura:</label>
+        <input type="text" id="dataAssinatura" name="dataAssinatura" required>
+
+        <button type="submit">Gerar PDF</button>
+        <button type="button" class="btn-secondary" id="resetForm">Limpar Formulário</button>
+        <div class="loading" id="loading">Gerando o termo... Aguarde.</div>
+        <div class="error-message" id="error-message"></div>
+        <div class="success-message" id="success-message"></div>
+    </form>
+
+ <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            document.getElementById('dataSaida').value = `${day}/${month}/${year}`;
+            document.getElementById('numeroTermo').value = Math.floor(Math.random() * 10000000) + 1;
+            document.getElementById('patrimonio').value = Math.floor(Math.random() * 100000000) + 1;
+            document.getElementById('dataAssinatura').value = `${day}/${month}/${year}`;
+            // Buscar posto
+            document.getElementById('buscarPostoBtn').addEventListener('click', async () => {
+                const postoId = document.getElementById('postoId').value;
+                if (!postoId.trim()) {
+                    alert('Insira um ID válido.');
+                    return;
+                }
+                try {
+                    const response = await fetch(`http://172.20.20.127:8080/pi?id=${postoId}`);
+                    if (!response.ok) throw new Error('Erro ao buscar dados.');
+                    const data = await response.json();
+                    if (data.length === 0) throw new Error('Posto não encontrado.');
+
+                    const posto = data[0];
+                    document.getElementById('solicitante').value = posto.nome || '';
+                    document.getElementById('endereco').value = posto.endereco || '';
+                    document.getElementById('contatos').value = posto.contatos || '';
+                    document.getElementById('gerente').value = posto.coordenador || '';
+                } catch (error) {
+                    alert(`Erro: ${error.message}`);
+                }
+            });
+
+            // Limpar formulário
+            document.getElementById('resetForm').addEventListener('click', () => {
+                document.getElementById('generate-pdf-form').reset();
+            });
+
+           // Gerar PDF e Salvar Dados no Banco
+document.getElementById('generate-pdf-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.getElementById('loading').style.display = 'block';
+
+    const formDataPDF = {
+        numeroTermo: document.getElementById('numeroTermo').value,
+        patrimonio: document.getElementById('patrimonio').value,
+        solicitante: document.getElementById('solicitante').value,
+        local: document.getElementById('local').value,
+        marcaModelo: document.getElementById('marcaModelo').value,
+        finalidade: document.getElementById('finalidade').value,
+        dataSaida: document.getElementById('dataSaida').value,
+        endereco: document.getElementById('endereco')?.value || '',
+        contatos: document.getElementById('contatos')?.value || '',
+        gerente: document.getElementById('gerente')?.value || '',
+        acessorios: document.getElementById('acessorios')?.value || '',
+        dataAssinatura: document.getElementById('dataAssinatura')?.value || '',
+    };
+
+    const formDataBanco = {
+        n_termo: document.getElementById('numeroTermo').value,
+        n_patrimonio: document.getElementById('patrimonio').value,
+        solicitante: document.getElementById('solicitante').value,
+        local_u: document.getElementById('local').value,
+        modelo: document.getElementById('marcaModelo').value,
+        finalidade: document.getElementById('finalidade').value,
+        data_saida: document.getElementById('dataSaida').value,
+    };
+
+    try {
+        
+        const pdfResponse = await fetch('http://172.20.20.127:3000/generate-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Certifique-se de definir o cabeçalho
+            },
+            body: JSON.stringify(formDataPDF),
+        });
+
+        if (!pdfResponse.ok) throw new Error('Erro ao gerar PDF.');
+
+        // Garantir que a resposta seja um PDF
+        const blob = await pdfResponse.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'termo_de_responsabilidade.pdf';
+        a.click();
+
+        // Enviar os dados para o banco
+        const saveResponse = await fetch('http://172.20.20.127:3000/termo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formDataBanco),
+        });
+        if (!saveResponse.ok) throw new Error('Erro ao salvar os dados na API.');
+
+        document.getElementById('success-message').innerText = 'Dados salvos com sucesso!';
+        document.getElementById('success-message').style.display = 'block';
+    } catch (err) {
+        document.getElementById('error-message').innerText = err.message;
+        document.getElementById('error-message').style.display = 'block';
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+    }
+});
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
