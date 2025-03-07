@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Sefaz - REDE 7</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        .status { font-size: 18px; font-weight: bold; }
+        .up { color: green; }
+        .down { color: red; }
+        .incident, .maintenance {
+            background: #ffeeba;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="superior1">
+        <div class="logo">
+            <h1>MONITORAMENTO SEFAZ</h1>
+        </div>
+        <div class="logo3">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+            </a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <p class="status">Carregando status...</p>
+        <div id="incidents"></div>
+        <div id="maintenances"></div>
+        <h2>Componentes</h2>
+        <div id="components"></div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                let [summaryResponse, componentsResponse] = await Promise.all([
+                    fetch('https://monitorsefaz.webmaniabr.com/summary.json'),
+                    fetch('https://monitorsefaz.webmaniabr.com/v2/components.json')
+                ]);
+
+                if (!summaryResponse.ok || !componentsResponse.ok) {
+                    throw new Error('Erro ao carregar os dados da API');
+                }
+
+                let summaryData = await summaryResponse.json();
+                let componentsData = await componentsResponse.json();
+
+                
+                const statusElement = document.querySelector('.status');
+                if (summaryData.page && summaryData.page.status) {
+                    statusElement.textContent = `Status: ${summaryData.page.status}`;
+                    statusElement.classList.add(summaryData.page.status === 'UP' ? 'up' : 'down');
+                } else {
+                    statusElement.textContent = 'Status desconhecido';
+                }
+
+               
+                let incidentsDiv = document.getElementById('incidents');
+                incidentsDiv.innerHTML = '<h2>Incidentes Recentes</h2>';
+                if (summaryData.activeIncidents && summaryData.activeIncidents.length > 0) {
+                    summaryData.activeIncidents.forEach(incident => {
+                        incidentsDiv.innerHTML += `
+                            <div class='incident'>
+                                <strong>${incident.name}</strong><br>
+                                Status: ${incident.status}<br>
+                                <a href='${incident.url}' target='_blank'>Detalhes</a>
+                            </div>`;
+                    });
+                } else {
+                    incidentsDiv.innerHTML += '<p>Sem incidentes ativos no momento.</p>';
+                }
+
+           
+                let maintenanceDiv = document.getElementById('maintenances');
+                maintenanceDiv.innerHTML = '<h2>Manutenções</h2>';
+                if (summaryData.activeMaintenances && summaryData.activeMaintenances.length > 0) {
+                    summaryData.activeMaintenances.forEach(maintenance => {
+                        maintenanceDiv.innerHTML += `
+                            <div class='maintenance'>
+                                <strong>${maintenance.name}</strong><br>
+                                Status: ${maintenance.status}<br>
+                                <a href='${maintenance.url}' target='_blank'>Detalhes</a>
+                            </div>`;
+                    });
+                } else {
+                    maintenanceDiv.innerHTML += '<p>Sem manutenções ativas no momento.</p>';
+                }
+
+            
+                let componentsDiv = document.getElementById('components');
+                componentsDiv.innerHTML = '';
+                if (Array.isArray(componentsData) && componentsData.length > 0) {
+                    componentsData.forEach(component => {
+                        componentsDiv.innerHTML += `<p><strong>${component.name}</strong>: ${component.status}</p>`;
+                    });
+                } else {
+                    componentsDiv.innerHTML = '<p>Nenhum componente encontrado.</p>';
+                }
+
+            } catch (error) {
+                document.querySelector('.status').textContent = 'Erro ao carregar dados';
+                console.error('Erro ao buscar os dados:', error);
+            }
+        }
+        
+        fetchData();
+    </script>
+</body>
+</html>

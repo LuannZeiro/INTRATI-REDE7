@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerar Termo de Responsabilidade</title>
+    <title>Gerar Termo - REDE7</title>
     <link rel="stylesheet" href="style/style.css">
+    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -212,14 +213,14 @@ document.getElementById('generate-pdf-form').addEventListener('submit', async (e
         const pdfResponse = await fetch('http://172.20.20.127:3000/generate-pdf', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Certifique-se de definir o cabeçalho
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify(formDataPDF),
         });
 
         if (!pdfResponse.ok) throw new Error('Erro ao gerar PDF.');
 
-        // Garantir que a resposta seja um PDF
+
         const blob = await pdfResponse.blob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -227,7 +228,6 @@ document.getElementById('generate-pdf-form').addEventListener('submit', async (e
         a.download = 'termo_de_responsabilidade.pdf';
         a.click();
 
-        // Enviar os dados para o banco
         const saveResponse = await fetch('http://172.20.20.127:3000/termo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
