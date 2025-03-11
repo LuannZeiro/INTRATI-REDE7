@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
-    <title>Login - REDE 7</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,8 +86,13 @@
             <p id="loginMsg"></p>
         </div>
     </div>
-
     <script>
+        // Função para verificar o token no localStorage e incluir no cabeçalho
+        function getToken() {
+            return localStorage.getItem("token");
+        }
+
+        // Enviar a requisição de login
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
             const email = document.getElementById("loginEmail").value;
@@ -102,15 +106,31 @@
             
             const data = await response.json();
             document.getElementById("loginMsg").innerText = data.msg;
-
-            // Se o login for bem-sucedido, redireciona para o index.html
+            
             if (response.status === 200 && data.token) {
                 localStorage.setItem("token", data.token);
-                window.location.href = "index.html"; // Redireciona para a página index.html
+                
+              
+                const token = data.token;
+                const protectedResponse = await fetch("http://172.20.20.127:5000/rota-protegida", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const protectedData = await protectedResponse.json();
+                
+
+                if (protectedResponse.status === 200) {
+
+                    window.location.href = "index.html"; 
+                } else {
+
+                    document.getElementById("loginMsg").innerText = "Acesso negado à área protegida.";
+                }
             }
         });
     </script>
-    <p>Não tem uma conta? <a href="registro.html">Crie uma conta</a></p>
-
 </body>
 </html>
