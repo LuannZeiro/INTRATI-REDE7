@@ -164,4 +164,8 @@ button:hover {
     .botaonet button{
         width: 300px;
     }
+    .superior{
+        font-size: 9px;
+       
+    }
 }

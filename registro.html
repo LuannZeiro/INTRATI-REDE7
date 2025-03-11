@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
-    <title>Login - REDE 7</title>
+    <title>Registro</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +35,7 @@
             margin-bottom: 20px;
             color: #2e7d32;
         }
-        input, button {
+        input, select, button {
             width: 100%;
             margin: 5px -10px;
             padding: 10px;
@@ -55,6 +54,10 @@
         }
         p {
             color: rgb(3, 179, 0);
+        }
+        #protectedBox {
+            margin-top: 20px;
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -78,39 +81,44 @@
 <body>
     <div class="container">
         <div class="box">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <input type="email" id="loginEmail" placeholder="E-mail" required>
-                <input type="password" id="loginSenha" placeholder="Senha" required>
-                <button type="submit">Entrar</button>
+            <h2>Registro</h2>
+            <form id="registerForm">
+                <input type="text" id="usuario" placeholder="Usuário" required>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <input type="password" id="senha" placeholder="Senha" required>
+                <select id="role" required>
+                    <option value="" disabled selected>Selecione o Nível</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+                <button type="submit">Registrar</button>
             </form>
-            <p id="loginMsg"></p>
+            <p id="registerMsg"></p>
         </div>
     </div>
-
     <script>
-        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+        document.getElementById("registerForm").addEventListener("submit", async function(event) {
             event.preventDefault();
-            const email = document.getElementById("loginEmail").value;
-            const senha = document.getElementById("loginSenha").value;
+            const usuario = document.getElementById("usuario").value;
+            const email = document.getElementById("email").value;
+            const senha = document.getElementById("senha").value;
+            const role = document.getElementById("role").value;
             
-            const response = await fetch("http://172.20.20.127:5000/login", {
+            const response = await fetch("http://172.20.20.127:5000/registrar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, senha })
+                body: JSON.stringify({ usuario, email, senha, role })
             });
             
             const data = await response.json();
-            document.getElementById("loginMsg").innerText = data.msg;
-
-            // Se o login for bem-sucedido, redireciona para o index.html
-            if (response.status === 200 && data.token) {
+            document.getElementById("registerMsg").innerText = data.msg;
+            
+            if (response.status === 201 && data.token) {
                 localStorage.setItem("token", data.token);
-                window.location.href = "index.html"; // Redireciona para a página index.html
+                alert("Usuário registrado com sucesso!");
             }
         });
     </script>
-    <p>Não tem uma conta? <a href="registro.html">Crie uma conta</a></p>
-
+    <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
 </body>
 </html>
