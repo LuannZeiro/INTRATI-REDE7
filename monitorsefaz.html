@@ -25,7 +25,7 @@
         .up { color: green; }
         .down { color: red; }
         .incident, .maintenance {
-            background: #ffeeba;
+            background: #ff7676;
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
@@ -51,7 +51,6 @@
         <h2>Componentes</h2>
         <div id="components"></div>
     </div>
-
     <script>
         async function fetchData() {
             try {
@@ -59,15 +58,14 @@
                     fetch('https://monitorsefaz.webmaniabr.com/summary.json'),
                     fetch('https://monitorsefaz.webmaniabr.com/v2/components.json')
                 ]);
-
+    
                 if (!summaryResponse.ok || !componentsResponse.ok) {
                     throw new Error('Erro ao carregar os dados da API');
                 }
-
+    
                 let summaryData = await summaryResponse.json();
                 let componentsData = await componentsResponse.json();
-
-                
+    
                 const statusElement = document.querySelector('.status');
                 if (summaryData.page && summaryData.page.status) {
                     statusElement.textContent = `Status: ${summaryData.page.status}`;
@@ -75,24 +73,21 @@
                 } else {
                     statusElement.textContent = 'Status desconhecido';
                 }
-
-               
+    
                 let incidentsDiv = document.getElementById('incidents');
-                incidentsDiv.innerHTML = '<h2>Incidentes Recentes</h2>';
-                if (summaryData.activeIncidents && summaryData.activeIncidents.length > 0) {
-                    summaryData.activeIncidents.forEach(incident => {
-                        incidentsDiv.innerHTML += `
-                            <div class='incident'>
-                                <strong>${incident.name}</strong><br>
-                                Status: ${incident.status}<br>
-                                <a href='${incident.url}' target='_blank'>Detalhes</a>
-                            </div>`;
-                    });
+                incidentsDiv.innerHTML = '<h2>Incidentes</h2>';
+                if (summaryData.activeIncidents && summaryData.activeIncidents.length > 3) {
+                    let incident = summaryData.activeIncidents[0];
+                    incidentsDiv.innerHTML += `
+                        <div class='incident'>
+                            <strong>${incident.name}</strong><br>
+                            Status: ${incident.status}<br>
+                            <a href='${incident.url}' target='_blank'>Detalhes</a>
+                        </div>`;
                 } else {
-                    incidentsDiv.innerHTML += '<p>Sem incidentes ativos no momento.</p>';
+                    incidentsDiv.innerHTML = ''; 
                 }
-
-           
+    
                 let maintenanceDiv = document.getElementById('maintenances');
                 maintenanceDiv.innerHTML = '<h2>Manutenções</h2>';
                 if (summaryData.activeMaintenances && summaryData.activeMaintenances.length > 0) {
@@ -107,8 +102,7 @@
                 } else {
                     maintenanceDiv.innerHTML += '<p>Sem manutenções ativas no momento.</p>';
                 }
-
-            
+    
                 let componentsDiv = document.getElementById('components');
                 componentsDiv.innerHTML = '';
                 if (Array.isArray(componentsData) && componentsData.length > 0) {
@@ -118,7 +112,7 @@
                 } else {
                     componentsDiv.innerHTML = '<p>Nenhum componente encontrado.</p>';
                 }
-
+    
             } catch (error) {
                 document.querySelector('.status').textContent = 'Erro ao carregar dados';
                 console.error('Erro ao buscar os dados:', error);
@@ -127,7 +121,7 @@
         
         fetchData();
     </script>
-    <div class="rodape">
+     <div class="rodape">
         <p>REDE 7 - Versão 3.3 | © Todos os direitos reservados.</p>
     </div>
 </body>

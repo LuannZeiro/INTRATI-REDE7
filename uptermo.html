@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Termo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0fdf4;
+            color: #065f46;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #064e3b;
+        }
+
+        form {
+            background-color: #ffffff;
+            border: 1px solid #d1fae5;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #d1fae5;
+            border-radius: 5px;
+            background-color: #ecfdf5;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background-color: #10b981;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #059669;
+        }
+
+        button:focus {
+            outline: 2px solid #065f46;
+        }
+
+        button:disabled {
+            background-color: #d1fae5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <form id="alterTermoForm">
+        <h1>Alterar Termo</h1>
+
+        <label for="n_termo">Número do Termo:</label>
+        <input type="text" id="n_termo" name="n_termo" placeholder="Digite o número do termo" required>
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" placeholder="Digite o estado" required>
+
+        <label for="observacao">Observação:</label>
+        <textarea id="observacao" name="observacao" placeholder="Digite sua observação" required></textarea>
+
+        <label for="data_devolucao">Data de Devolução:</label>
+        <input type="date" id="data_devolucao" name="data_devolucao" required>
+
+        <button type="submit">Alterar Termo</button>
+    </form>
+
+    <script>
+        document.getElementById('alterTermoForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Previne o envio padrão do formulário
+
+            // Coleta os dados do formulário
+            const formData = new FormData(this);
+            const data = {
+                n_termo: formData.get('n_termo'),
+                estado: formData.get('estado'),
+                observacao: formData.get('observacao'),
+                data_devolucao: formData.get('data_devolucao'),
+            };
+
+            // Faz a requisição PUT
+            fetch('http://172.20.20.127:3000/altertermo', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message || 'Alteração realizada com sucesso!');
+            })
+            .catch(error => {
+                console.error('Erro ao alterar o termo:', error);
+                alert('Erro ao alterar o termo');
+            });
+        });
+    </script>
+</body>
+</html>
+
+
