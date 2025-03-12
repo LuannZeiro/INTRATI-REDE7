@@ -13,7 +13,7 @@
  display: inline-block;
  position: relative;
  padding: 10px 25px;
- background-color: #4CC713;
+ background-color: #028108;
  color: white;
  font-family: sans-serif;
  text-decoration: none;
@@ -21,10 +21,11 @@
  text-align: center;
  text-indent: 15px;
  border: none;
+ height: 45px;
 }
 
 .buttonDownload:hover {
- background-color: #45a21a;
+ background-color: #1b4f35;
  color: white;
 }
 
@@ -71,6 +72,15 @@
   padding: 30px;
 }
 
+input{
+    width: 320px;
+    height: 30px;
+    padding: 5px;
+    margin-top: 50px;
+    font-size: 20px;
+    
+  }
+
 @keyframes downloadArrow {
  0% {
   margin-top: -7px;
@@ -91,19 +101,46 @@
   opacity: 0.4;
  }
 }
+
+@media (max-width: 480px){
+  h1{
+    font-size: 14px;
+  }
+  img{
+    width: 30px;
+    height: 30px;
+  }
+  input{
+    width: 320px;
+    padding: 5px;
+    margin-top: 50px;
+  }
+  button{
+    width: 335px;
+    height: 100px;
+    margin-top: 50px;
+  }
+  label{
+    margin-top: 20px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
   </style>
 
 <body>
   <div class="superior1">
-    <h1>DOWNLOAD TERMO</h1>
+    <h1>DOWNLOAD DE TERMO DE RESPONSABILIDADE</h1>
     <a href="index.html">
         <img src="img/logor7.png" alt="logo" height="70px" width="70px">
     </a>
 </div>
 <div class="downloadForm">
   <form id="downloadForm">
-    <label for="nTermo">Digite o N° do Termo:</label>
-    <input type="text" id="nTermo" name="nTermo" required>
+    
+    <input type="text" id="nTermo" name="nTermo" placeholder="Digite o Número do Termo:" required >
     <button class="buttonDownload" type="submit">DOWNLOAD</button>
   </form></div>
 

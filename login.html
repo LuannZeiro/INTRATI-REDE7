@@ -75,6 +75,7 @@
     </style>
 </head>
 <body>
+    <img src="img/Logo_secundaria_horizontal_positivo_RGB.png" width="200px">
     <div class="container">
         <div class="box">
             <h2>Login</h2>
@@ -87,12 +88,12 @@
         </div>
     </div>
     <script>
-        // Função para verificar o token no localStorage e incluir no cabeçalho
+       
         function getToken() {
             return localStorage.getItem("token");
         }
 
-        // Enviar a requisição de login
+        
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
             const email = document.getElementById("loginEmail").value;
@@ -127,10 +128,11 @@
                     window.location.href = "index.html"; 
                 } else {
 
-                    document.getElementById("loginMsg").innerText = "Acesso negado à área protegida.";
+                    document.getElementById("loginMsg").innerText = "Acesso negado.";
                 }
             }
         });
     </script>
+    <p>Não tem uma conta? <a href="registro.html">Faça o cadastro</a></p>
 </body>
 </html>

@@ -3,85 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alterar Termo</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
+    <title>Alterar Termo - REDE 7</title>
     <style>
-        body {
+           body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0fdf4;
-            color: #065f46;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            margin: 20px;
+            background-color: #f4f4f4;
         }
-
-        h1 {
-            color: #064e3b;
-        }
-
         form {
-            background-color: #ffffff;
-            border: 1px solid #d1fae5;
-            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
             padding: 20px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
         label {
-            display: block;
-            margin-bottom: 8px;
             font-weight: bold;
+            display: block;
+            margin-top: 10px;
         }
-
-        input[type="text"],
-        input[type="date"],
-        textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #d1fae5;
-            border-radius: 5px;
-            background-color: #ecfdf5;
+        input, select, textarea, button {
+            width: 97%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
+      
         button {
-            background-color: #10b981;
+            width: 100%;
+            background-color: #028108;
             color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            width: 100%;
+            border: none;
         }
-
+      
         button:hover {
-            background-color: #059669;
+            background-color: #1b4f35;
+        }
+        .btn-secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background-color: #bbb;
+        }
+        .loading, .error-message, .success-message {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .loading {
+            display: none;
+        }
+        .error-message {
+            color: red;
+        }
+        .success-message {
+            color: green;
         }
 
-        button:focus {
-            outline: 2px solid #065f46;
+        @media (max-width: 1080px){
+            h1{
+                font-size: 12px;
+            }
+            img{
+                width: 40px;
+                height: 40px;
+            }
         }
-
-        button:disabled {
-            background-color: #d1fae5;
-            cursor: not-allowed;
+        @media (max-width: 480px){
+            .botaotermo{
+                width: 400px;
+                margin-left: -25px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="superior1">
+        <div class="logo">
+        <h1>ALTERAR TERMO DE RESPONSABILIDADE</h1>
+        </div>
+        <div class="logo3">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+    </a>
+        </div>
+    </div>
     <form id="alterTermoForm">
-        <h1>Alterar Termo</h1>
 
         <label for="n_termo">Número do Termo:</label>
         <input type="text" id="n_termo" name="n_termo" placeholder="Digite o número do termo" required>
@@ -100,9 +114,9 @@
 
     <script>
         document.getElementById('alterTermoForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Previne o envio padrão do formulário
+            event.preventDefault(); 
 
-            // Coleta os dados do formulário
+          
             const formData = new FormData(this);
             const data = {
                 n_termo: formData.get('n_termo'),
@@ -111,7 +125,7 @@
                 data_devolucao: formData.get('data_devolucao'),
             };
 
-            // Faz a requisição PUT
+           
             fetch('http://172.20.20.127:3000/altertermo', {
                 method: 'PUT',
                 headers: {

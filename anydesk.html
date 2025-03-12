@@ -165,7 +165,6 @@
     </table>
   </div>
 
- 
   <div id="popup" class="popup">
     <div class="popup-content">
       <h3>Atualizar PDV</h3>
@@ -178,7 +177,7 @@
         <option value="4">4</option>
         <option value="5">5</option>
         <option value="6">6</option>
-    </select>
+      </select>
       <input type="text" id="updateValor" placeholder="Valor">
       <button class="btn btn-small" onclick="atualizarPDV()">Salvar</button>
       <button class="btn btn-small close-btn" onclick="fecharPopup()">Fechar</button>
@@ -188,30 +187,37 @@
   <script>
     const apiUrl = 'http://172.20.20.127:3000/any';
     const updateUrl = 'http://172.20.20.127:3000/update-pdv';
+    const token = localStorage.getItem("token"); 
 
-    function buscarDados() {
-      const searchValue = document.getElementById('searchInput').value.trim();
-      let queryUrl = apiUrl;
-      if (searchValue) {
-        if (!isNaN(searchValue)) {
-          queryUrl += `?id=${searchValue}`;
-        } else {
-          queryUrl += `?posto=${encodeURIComponent(searchValue)}`;
-        }
-      }
-      fetchData(queryUrl);
-    }
 
     async function fetchData(url) {
       try {
         document.getElementById('message').textContent = 'Carregando...';
-        const response = await fetch(url);
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
         if (!response.ok) throw new Error('Erro ao buscar dados.');
+
         const data = await response.json();
         populateTable(data);
       } catch (error) {
         document.getElementById('message').textContent = error.message;
       }
+    }
+
+    function buscarDados() {
+      const searchValue = document.getElementById('searchInput').value.trim();
+      let queryUrl = apiUrl;
+      if (searchValue) {
+        queryUrl += isNaN(searchValue) ? `?posto=${encodeURIComponent(searchValue)}` : `?id=${searchValue}`;
+      }
+      fetchData(queryUrl);
     }
 
     function populateTable(data) {
@@ -227,12 +233,14 @@
       document.getElementById('message').style.display = 'none';
       tableHead.innerHTML = '';
       tableBody.innerHTML = '';
+
       const headers = Object.keys(data[0]);
       headers.forEach(header => {
         const th = document.createElement('th');
         th.textContent = header;
         tableHead.appendChild(th);
       });
+
       data.forEach(row => {
         const tr = document.createElement('tr');
         headers.forEach(header => {
@@ -242,42 +250,9 @@
         });
         tableBody.appendChild(tr);
       });
+
       table.style.display = 'table';
     }
-
-    async function atualizarPDV() {
-  const id = document.getElementById('updateId').value.trim();
-  const pdv = document.getElementById('updatePdv').value.trim();
-  let valor = document.getElementById('updateValor').value.trim();
-
-  if (!id || !pdv) {
-    alert("ID e PDV são obrigatórios!");
-    return;
-  }
-
-  if (valor === "") {
-    valor = "-";
-  }
-
-  try {
-    const response = await fetch(updateUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, pdv, valor })
-    });
-    const result = await response.json();
-    if (response.ok) {
-      alert(result.message);
-      fecharPopup();
-      fetchData(apiUrl);
-    } else {
-      alert(result.error);
-    }
-  } catch (error) {
-    alert("Erro ao atualizar PDV.");
-  }
-}
-
 
     function abrirPopup() {
       document.getElementById('popup').style.display = 'flex';
@@ -288,15 +263,10 @@
     }
 
     document.getElementById('searchInput').addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        buscarDados();
-      }
+      if (event.key === 'Enter') buscarDados();
     });
 
     fetchData(apiUrl);
   </script>
-  <div class="rodape">
-    <p>REDE 7 - Versão 3.3 | © Todos os direitos reservados.</p>
-</div>
 </body>
 </html>

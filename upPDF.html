@@ -3,64 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload de PDF</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
+    <title>Upload de PDF - REDE 7</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 12px 8px 16px;
+            gap: 8px;
+            height: 40px;
+            width: 340px;
+            border: none;
+            background: #2e7d32;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .lable {
+            margin-top: 1px;
+            font-size: 19px;
+            line-height: 22px;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .button:hover {
+            background: #1b5e20;
+        }
+
+        .button:hover .svg-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        input{
+            width: 340px;
+            height: 50px;
+            border-radius: 10px;
+            
+        }
+
+        label {
+                width: 300px;
+            }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-8deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(8deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @media (max-width: 480px){
+            label {
+                width: 200px;
+            }
+            h1 {
+                font-size: 15px;
+            }
+            img {
+                width: 40px;
+                height: 40px;
+            }
+            input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 50px;
+                width: 240px;
+                margin-top: 10px;
+                
+            }
+            button.button{
+                width: 240px;
+            }
+        }
+
+        /* Estilização do botão de escolher arquivo */
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2e7d32;
+            color: white;
+            font-size: 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Exibir nome do arquivo */
+        #file-name {
+            display: block;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-
-    <h1>Enviar PDF</h1>
+    <div class="superior1">
+        <div class="logo">
+            <h1>SUBIR TERMO DE RESPONSABILIDADE</h1>
+        </div>
+        <div class="logo3">
+            <a href="index.html">
+                <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+            </a>
+        </div>
+    </div>
     
-    <!-- Formulário para upload -->
     <form id="uploadForm">
-        <label for="pdf">Selecione o arquivo PDF:</label>
-        <input type="file" id="pdf" name="pdf" accept="application/pdf" required>
+        <label for="file-upload" class="custom-file-upload">
+            Escolher arquivo
+        </label>
+        <input type="file" id="file-upload" name="pdf" accept="application/pdf" required>
+        <span id="file-name">Nenhum arquivo selecionado</span>
+        
         <br><br>
-        <label for="n_termo">Número do Termo:</label>
-        <input type="text" id="n_termo" name="n_termo" required>
+        <input type="text" id="n_termo" name="n_termo" placeholder="Número do Termo:" required>
         <br><br>
-        <button type="submit">Enviar PDF</button>
+        
+        <button type="submit" class="button">
+            <svg fill="none" height="24" viewBox="0 0 24 24" width="24" class="svg-icon">
+                <g clip-rule="evenodd" fill-rule="evenodd" stroke="white" stroke-linecap="round" stroke-width="2">
+                    <path d="m3 7h17c.5523 0 1 .44772 1 1v11c0 .5523-.4477 1-1 1h-16c-.55228 0-1-.4477-1-1z"></path>
+                    <path d="m3 4.5c0-.27614.22386-.5.5-.5h6.29289c.13261 0 .25981.05268.35351.14645l2.8536 2.85355h-10z"></path>
+                </g>
+            </svg>
+            <span class="lable">Enviar</span>
+        </button>
     </form>
 
     <div id="responseMessage" style="margin-top: 20px;"></div>
 
     <script>
-        // Função para lidar com o envio do formulário
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Previne o envio padrão do formulário
+            event.preventDefault();
 
             const formData = new FormData();
-            const fileInput = document.getElementById('pdf');
+            const fileInput = document.getElementById('file-upload');
             const termoInput = document.getElementById('n_termo');
-            
-            // Verifica se um arquivo foi selecionado
+
             if (fileInput.files.length === 0) {
                 alert('Por favor, selecione um arquivo PDF.');
                 return;
             }
 
             formData.append('pdf', fileInput.files[0]);
-            formData.append('n_termo', termoInput.value);  // Adiciona o termo ao FormData
+            formData.append('n_termo', termoInput.value);
 
-            // Envia a requisição POST com o PDF e o número do termo
             fetch('http://172.20.20.127:3000/upload-pdf', {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => {
-                // Verifica se a resposta é JSON
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // Exibe a mensagem de sucesso ou erro
                 document.getElementById('responseMessage').innerHTML = data.message;
                 document.getElementById('responseMessage').style.color = 'green';
             })
             .catch(error => {
-                // Exibe a mensagem de erro
                 document.getElementById('responseMessage').innerHTML = 'Erro ao enviar o PDF: ' + error.message;
                 document.getElementById('responseMessage').style.color = 'red';
             });
         });
-    </script>
 
+        // Exibir nome do arquivo selecionado
+        document.getElementById('file-upload').addEventListener('change', function() {
+            let fileName = this.files.length > 0 ? this.files[0].name : "Nenhum arquivo selecionado";
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
 </body>
 </html>
