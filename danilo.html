@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/logor7.png" type="image/x-icon">
+  <title>Relatório Técnico - REDE 7</title>
+  <link rel="stylesheet" href="style/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+       
+       * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+input, select, textarea, button {
+  width: 97%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  background-color: #028108;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #1b4f35;
+}
+
+.btn-secondary {
+  background-color: #ccc;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #bbb;
+}
+
+.loading, .error-message, .success-message {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.loading {
+  display: none;
+}
+
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}
+
+.pdf-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  border: 2px solid #81c784;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #fff;
+}
+
+#pdfCanvas, #signatureCanvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+}
+
+.signature-canvas {
+  border: 2px dashed #388e3c;
+  border-radius: 5px;
+}
+
+.msg {
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.msg.success {
+  color: green;
+}
+
+.msg.error {
+  color: red;
+}
+
+
+@media (max-width: 480px) {
+  .botaotermo {
+    width: 400px;
+    margin-left: -25px;
+  }
+  h1 {
+    font-size: 20px;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+
+</style>
+  
+</head>
+<body>
+  <div class="superior1">
+    <div class="logo">
+      <h1>RELATÓRIO TÉCNICO</h1>
+    </div>
+    <div class="logo3">
+      <a href="index.html">
+        <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+      </a>
+    </div>
+  </div>
+  <div class="container">
+    <form id="relatorioForm">
+      <div class="form-group">
+        <label for="data_1">Data</label>
+        <input type="text" id="data_1" class="input" readonly>
+      </div>
+      <div class="form-group">
+        <label for="nome">Nome do Técnico</label>
+        <input type="text" id="nome" class="input" placeholder="Digite o nome do técnico" required>
+      </div>
+      <div class="form-group">
+        <label for="posto">Posto</label>
+        <input type="text" id="posto" class="input" placeholder="Digite o posto de atendimento" required>
+      </div>
+      <div class="form-group">
+        <label for="chamado">Chamado por</label>
+        <input type="text" id="chamado" class="input" placeholder="Quem solicitou o atendimento">
+      </div>
+      <div class="form-group">
+        <label for="defeito">Defeito</label>
+        <input type="text" id="defeito" class="input" placeholder="Descreva o defeito encontrado" required>
+      </div>
+      <div class="form-group">
+        <label for="chegada">Horário de Chegada</label>
+        <input type="time" id="chegada" class="input">
+      </div>
+      <div class="form-group">
+        <label for="saida">Horário de Saída</label>
+        <input type="time" id="saida" class="input">
+      </div>
+      <div class="form-group">
+        <label for="solucao">Solução</label>
+        <textarea id="solucao" class="input" placeholder="Descreva a solução aplicada" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="equipamento">Equipamentos Utilizados</label>
+        <input type="text" id="equipamento" class="input" placeholder="Liste os equipamentos utilizados">
+      </div>
+      <div class="form-group">
+        <label for="empresa">Empresa</label>
+        <input type="text" id="empresa" class="input" placeholder="Nome da empresa atendida">
+      </div>
+      <div class="form-group">
+        <label for="responsavel">Responsável pelo Atendimento</label>
+        <input type="text" id="responsavel" class="input" placeholder="Nome do responsável">
+      </div>
+      <button type="button" class="btn" onclick="gerarPDF()">Gerar PDF</button>
+    </form>
+
+    <div class="pdf-container">
+      <canvas id="pdfCanvas"></canvas>
+      <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+    </div>
+
+    <button class="btn" onclick="clearSignature()">Limpar Assinatura</button>
+    <button class="btn" onclick="enviarDados()">Enviar Relatório</button>
+
+    <div id="mensagem"></div>
+  </div>
+
+  <script>
+ 
+    let pdfDoc = null;
+    let pdfBlobGlobal = null;
+
+
+    let signatureCanvas = new fabric.Canvas('signatureCanvas', {
+      isDrawingMode: true
+    });
+    signatureCanvas.freeDrawingBrush.width = 2;
+    signatureCanvas.freeDrawingBrush.color = "black";
+
+    // Define a data atual no campo "data_1"
+    function definirDataHoraAtual() {
+      const agora = new Date();
+      const dia = String(agora.getDate()).padStart(2, '0');
+      const mes = String(agora.getMonth() + 1).padStart(2, '0');
+      const ano = agora.getFullYear();
+      document.getElementById("data_1").value = `${dia}/${mes}/${ano}`;
+    }
+
+    // Limpa o canvas da assinatura
+    function clearSignature() {
+      signatureCanvas.clear();
+      signatureCanvas.isDrawingMode = true;
+    }
+
+    // Gera o PDF chamando o endpoint e renderiza na tela
+    async function gerarPDF() {
+      let formData = {
+        data_1: document.getElementById("data_1").value,
+        nome: document.getElementById("nome").value,
+        posto: document.getElementById("posto").value,
+        chamado: document.getElementById("chamado").value,
+        defeito: document.getElementById("defeito").value,
+        chegada: document.getElementById("chegada").value,
+        saida: document.getElementById("saida").value,
+        solucao: document.getElementById("solucao").value,
+        equipamento: document.getElementById("equipamento").value,
+        empresa: document.getElementById("empresa").value,
+        responsavel: document.getElementById("responsavel").value
+      };
+
+      let response = await fetch("http://172.20.20.127:3000/generate/rvt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        alert("Erro ao gerar PDF!");
+        return;
+      }
+
+      let pdfBlob = await response.blob();
+      pdfBlobGlobal = pdfBlob; // Armazena para uso posterior
+      loadPDF(pdfBlob);
+    }
+
+    // Renderiza o PDF usando pdf.js para visualização
+    async function loadPDF(pdfBlob) {
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let page = await pdfDoc.getPage(1);
+      let viewport = page.getViewport({ scale: 1.5 });
+
+      let canvas = document.getElementById('pdfCanvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      signatureCanvas.setWidth(viewport.width);
+      signatureCanvas.setHeight(viewport.height);
+
+      let renderContext = {
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      };
+      await page.render(renderContext);
+    }
+
+    // Usa PDF-lib para incorporar a assinatura no PDF
+    async function adicionarAssinaturaAoPDF(pdfBlob) {
+      // Carrega o PDF com PDF-lib
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      const pdfLibDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const pages = pdfLibDoc.getPages();
+      const primeiraPagina = pages[0];
+
+      // Captura a imagem da assinatura como Data URL (PNG)
+      const signatureDataUrl = signatureCanvas.toDataURL('image/png');
+      // Converte a Data URL para ArrayBuffer
+      const signatureImageBytes = await fetch(signatureDataUrl).then(res => res.arrayBuffer());
+      // Incorpora a imagem no PDF
+      const pngImage = await pdfLibDoc.embedPng(signatureImageBytes);
+      // Define escala e dimensões para a assinatura
+      const pngDims = pngImage.scale(0.8);
+      const pageWidth = primeiraPagina.getWidth();
+      const pageHeight = primeiraPagina.getHeight();
+      const margin = 100; // margem para posicionamento
+      // Posiciona a assinatura no canto inferior direito
+      const x = 30;
+      const y = -165; // Posição acima das assinaturas
+      primeiraPagina.drawImage(pngImage, { x, y, width: pngDims.width, height: pngDims.height });
+      
+      // Salva o PDF modificado e retorna os bytes
+      const modifiedPdfBytes = await pdfLibDoc.save();
+      return modifiedPdfBytes;
+    }
+
+    // Converte um Blob em uma string base64
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          // reader.result vem no formato dataURL; remove o prefixo
+          const dataUrl = reader.result;
+          const base64 = dataUrl.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    // Envia os dados e o PDF modificado (com a assinatura incorporada) via JSON raw
+    async function enviarDados() {
+      const mensagem = document.getElementById("mensagem");
+      mensagem.textContent = "Enviando relatório...";
+
+      if (!pdfBlobGlobal) {
+        mensagem.textContent = "Nenhum PDF gerado.";
+        return;
+      }
+
+      try {
+        // Incorpora a assinatura no PDF
+        const modifiedPdfBytes = await adicionarAssinaturaAoPDF(pdfBlobGlobal);
+        const modifiedPdfBlob = new Blob([modifiedPdfBytes], { type: "application/pdf" });
+        
+        // Converte o Blob do PDF para base64
+        const base64pdf = await blobToBase64(modifiedPdfBlob);
+
+        // Cria o objeto JSON com os dados do formulário e o PDF em base64
+        const data = {
+          data_1: document.getElementById("data_1").value,
+          nome: document.getElementById("nome").value,
+          posto: document.getElementById("posto").value,
+          chamado: document.getElementById("chamado").value,
+          defeito: document.getElementById("defeito").value,
+          chegada: document.getElementById("chegada").value,
+          saida: document.getElementById("saida").value,
+          solucao: document.getElementById("solucao").value,
+          equipamento: document.getElementById("equipamento").value,
+          empresa: document.getElementById("empresa").value,
+          responsavel: document.getElementById("responsavel").value,
+          pdf: base64pdf
+        };
+
+        // Envia os dados como JSON raw para o servidor
+        const response = await fetch("http://172.20.20.127:3000/rvt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          mensagem.textContent = "Erro ao enviar, preencha os campos!";
+          return;
+        }
+
+        mensagem.textContent = "Relatório enviado com sucesso, men!";
+      } catch (err) {
+        console.error(err);
+        mensagem.textContent = "Erro ao modificar o PDF.";
+      }
+    }
+
+    window.onload = definirDataHoraAtual;
+  </script>
+</body>
+</html>
