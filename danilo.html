@@ -59,6 +59,7 @@ button:hover {
   color: #333;
 }
 
+
 .btn-secondary:hover {
   background-color: #bbb;
 }
@@ -118,11 +119,29 @@ button:hover {
   color: red;
 }
 
+.btn2 {
+  width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 700px;
+}
+
+@media (max-width: 1080px){
+  .btn2 {
+  margin-left: 300px;
+}
+
+.botaotermo {
+    width: 400px;
+    margin-left: 300px;
+  }
+}
 
 @media (max-width: 480px) {
   .botaotermo {
     width: 400px;
-    margin-left: -25px;
+    margin-left: 0px;
   }
   h1 {
     font-size: 20px;
@@ -132,6 +151,11 @@ button:hover {
     width: 40px;
     height: 40px;
   }
+
+  .btn2 {
+  margin-left: 0px;
+}
+
 }
 
 
@@ -348,9 +372,8 @@ button:hover {
       <canvas id="pdfCanvas"></canvas>
       <canvas id="signatureCanvas" class="signature-canvas"></canvas>
     </div>
-
-    <button class="btn" onclick="clearSignature()">Limpar Assinatura</button>
-    <button class="btn" onclick="enviarDados()">Enviar Relatório</button>
+    <button class="btn2" onclick="clearSignature()">Limpar Assinatura</button>
+    <button class="btn2" onclick="enviarDados()">Enviar Relatório</button>
 
     <div id="mensagem"></div>
   </div>
