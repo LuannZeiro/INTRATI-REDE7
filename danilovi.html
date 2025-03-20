@@ -200,21 +200,18 @@
         }
 
         async function generatePDF(id) {
-            try {
-                const response = await fetch(`http://172.20.20.127:3000/pdf/${id}`);
-                const data = await response.json();
+    try {
+        const response = await fetch(`http://172.20.20.127:3000/pdf/${id}`);
+        const data = await response.json();
 
-                if (data.pdfTempUrl) {
-                    const pdfLink = document.getElementById(`pdfLink-${id}`);
-                    pdfLink.href = data.pdfTempUrl;
-                    pdfLink.style.display = 'inline';
-                    pdfLink.innerText = 'Abrir PDF';
-                    window.open(data.pdfTempUrl, '_blank');
-                }
-            } catch (error) {
-                console.error('Erro ao gerar PDF:', error);
-            }
+        if (data.pdfTempUrl) {
+            window.open(data.pdfTempUrl, '_blank'); // Abre o PDF automaticamente
         }
+    } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+    }
+}
+
 
         fetchRecords();
     </script>
