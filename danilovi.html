@@ -30,6 +30,7 @@
         td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            
         }
         tr:nth-child(even) {
             background-color: #f0fdf4;
@@ -54,7 +55,7 @@
             color: #028108;
             font-weight: bold;
             margin-left: 10px;
-            
+            display: none;
         }
         a:hover {
             color: #1b4f35;
@@ -71,9 +72,9 @@
           <h1>RELATÓRIO TÉCNICO</h1>
         </div>
         <div class="logo3">
-          <a href="index.html">
-            <img src="img/logor7.png" alt="logo" width="70px" height="70px">
-          </a>
+            <div onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <img src="img/logor7.png" alt="Logo R7" width="70" height="70" loading="lazy">
+              </div>              
         </div>
       </div>
     <p id="status" class="loading">Carregando registros...</p>
