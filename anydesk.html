@@ -209,6 +209,8 @@
           }
         });
 
+        
+
         if (!response.ok) throw new Error('Erro ao buscar dados.');
 
         const data = await response.json();
@@ -272,6 +274,7 @@
     document.getElementById('searchInput').addEventListener('keypress', function(event) {
       if (event.key === 'Enter') buscarDados();
     });
+
 
     fetchData(apiUrl);
   </script>

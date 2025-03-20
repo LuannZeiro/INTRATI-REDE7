@@ -9,13 +9,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #eaf5ea;
             margin: 20px;
             text-align: center;
         }
-        h2 {
-            color: #2d6a4f;
-        }
+      
         table {
             width: 100%;
             border-collapse: collapse;
@@ -26,7 +23,7 @@
             overflow: hidden;
         }
         th {
-            background-color: #2d6a4f;
+            background-color: #028108;
             color: white;
             padding: 10px;
         }
@@ -43,24 +40,24 @@
         button {
             padding: 7px 12px;
             cursor: pointer;
-            background-color: #40916c;
+            background-color: #028108;
             color: white;
             border: none;
             border-radius: 5px;
             transition: background 0.3s;
         }
         button:hover {
-            background-color: #1b4332;
+            background-color: #1b4f35;
         }
         a {
             text-decoration: none;
-            color: #2d6a4f;
+            color: #028108;
             font-weight: bold;
             margin-left: 10px;
-            display: none;
+            
         }
         a:hover {
-            color: #1b4332;
+            color: #1b4f35;
         }
         .loading {
             font-size: 16px;
@@ -69,8 +66,16 @@
     </style>
 </head>
 <body>
-
-    <h2>Lista de Registros</h2>
+    <div class="superior1">
+        <div class="logo">
+          <h1>RELATÓRIO TÉCNICO</h1>
+        </div>
+        <div class="logo3">
+          <a href="index.html">
+            <img src="img/logor7.png" alt="logo" width="70px" height="70px">
+          </a>
+        </div>
+      </div>
     <p id="status" class="loading">Carregando registros...</p>
     <table>
         <thead>
@@ -154,7 +159,7 @@
             }
         }
 
-        // Carregar os registros ao abrir a página
+    
         fetchRecords();
     </script>
 
